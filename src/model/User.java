@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 //import java.util.*;
 
-public class Analyst {
+public class User {
     private
         Connection connection = null;
         String login;
@@ -14,7 +14,7 @@ public class Analyst {
         int userId;
         String userName;
     
-    public Analyst() {
+    public User() {
         connection = new ConnectionDB().getConnection();
     }
     

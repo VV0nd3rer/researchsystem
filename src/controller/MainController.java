@@ -1,13 +1,13 @@
 package controller;
 
 import javax.swing.*;
-import model.Analyst;
+import model.User;
 
 public class MainController {
-    private Analyst analyst;
+    private User analyst;
     
     public MainController() {
-        analyst = new Analyst();
+        analyst = new User();
       }
     
     public boolean CheckUser(JTextField textLogin, JTextField textPass) {

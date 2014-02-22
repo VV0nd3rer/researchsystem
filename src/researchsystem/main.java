@@ -5,11 +5,10 @@
 
 package researchsystem;
 
-import view.Entry;
+import view.MainForm;
         
 public class main {
     public static void main(String[] args) {
-      Entry entryInSystem = new Entry();
-      entryInSystem.setVisible(true);
+     new MainForm();
     }
 }
