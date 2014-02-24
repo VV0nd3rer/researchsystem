@@ -1,10 +1,7 @@
 package model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-//import java.util.*;
+import java.sql.*;
+import java.util.*;
 
 public class User {
     private
@@ -13,13 +10,14 @@ public class User {
         String pass;
         int userId;
         String userName;
+        Vector DLPSystems = new Vector();
     
     public User() {
         connection = new ConnectionDB().getConnection();
     }
     
     public void findUser() {
-        System.out.println("In findUser method.");
+//        System.out.println("In findUser method.");
         String userQuery = "Select * from analysts where login = ? and password = ?";
         PreparedStatement userStmt = null;
         ResultSet userRs = null; 
@@ -40,6 +38,36 @@ public class User {
              System.out.println("Error in findUser method");
         }
   }
+    
+    public void findDLPSystems() {
+        String query = "SELECT * FROM dlp_systems";
+        ResultSetMetaData rsmd = null;
+        Statement sm = null;
+        ResultSet rs = null;
+        Vector row = new Vector();
+        try {
+            sm = connection.createStatement();
+            rs = sm.executeQuery(query);
+            rsmd = rs.getMetaData();
+            int rowCount = rsmd.getColumnCount();
+           
+            while (rs.next()) {
+                for (int i = 2; i < rowCount; i++) {
+                   row.addElement(rs.getObject(i));
+                }
+                DLPSystems.add(row);
+                row = new Vector(rowCount);
+            }
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Could not execute query");    
+        }
+    }
+    
+    public Vector getDLPSystems() {
+       return DLPSystems;
+    }
     
     public String getLogin() {
         return login;

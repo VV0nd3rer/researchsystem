@@ -1,14 +1,24 @@
 package controller;
 
 import javax.swing.*;
+import java.util.Vector;
 import model.User;
 
 public class MainController {
     private User analyst;
     
+    private static MainController instance = null;
+    
+    public static MainController getInstance() {
+            if(instance == null) {
+                instance = new MainController();
+            }
+            return instance;
+     }
+    
     public MainController() {
-        analyst = new User();
-      }
+        analyst = new User();  
+    }
     
     public boolean CheckUser(JTextField textLogin, JTextField textPass) {
         analyst.setLogin(textLogin.getText());
@@ -20,6 +30,11 @@ public class MainController {
         }
         else 
             return false;
+    }
+    
+    public Vector showDLPSystems() {
+         analyst.findDLPSystems();
+         return analyst.getDLPSystems();
     }
     
     public void SayHello(JLabel helloLabel) {
