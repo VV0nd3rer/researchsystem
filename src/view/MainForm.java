@@ -57,13 +57,13 @@ public class MainForm  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                  if (control.CheckUser(loginField, passField)) {
+                 // if (control.CheckUser(loginField, passField)) {
                     //control.SayHello(hiLabel);
                     guiFrame.remove(authPanel);
                     //guiFrame.add(userPanel);
                     createAnalystTab(guiFrame.getContentPane());
                     guiFrame.revalidate();
-                  }
+                 // }
             }
         });
         
