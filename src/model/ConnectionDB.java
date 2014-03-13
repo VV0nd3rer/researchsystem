@@ -5,8 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionDB {
-    private 
-            Connection connect = null;
+    private Connection connect = null;
+    private static ConnectionDB instance = null;
+    
+    public static ConnectionDB getInstance() {
+            if(instance == null) {
+                instance = new ConnectionDB();
+            }
+            return instance;
+     }
     
     public ConnectionDB() {
             Connect();

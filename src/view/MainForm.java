@@ -17,19 +17,18 @@ public class MainForm  {
     //Panels for authentification, 
     private JPanel authPanel = new JPanel();
     private JPanel userPanel = new JPanel();
+    private JPanel auditPanel = null;
     
     private JTextField loginField = new JTextField();
     private JTextField passField = new JTextField();
   
-//    private JLabel hiLabel = new JLabel("Hi")
-    
     private JButton loginButton = new  JButton("Ok");
-        
+    private JButton auditButton = new JButton("->");
+    
     private MainController control = null;
         
        
     public MainForm() {
-       // conrol = 
         //Auth panel
         authPanel.setLayout(null);
         loginField.setBounds(15,15, 150, 25);
@@ -38,11 +37,6 @@ public class MainForm  {
         authPanel.add(loginField);
         authPanel.add(passField);
         authPanel.add(loginButton);
-        
-        //User panel
-//        userPanel.setLayout(null);
-//        hiLabel.setBounds(50, 80, 150, 25);
-//        userPanel.add(hiLabel);
         
         control = MainController.getInstance();
         
@@ -57,11 +51,24 @@ public class MainForm  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                 // if (control.CheckUser(loginField, passField)) {
-                    //control.SayHello(hiLabel);
+                 // if (control.CheckUser(loginField, passField)) 
                     guiFrame.remove(authPanel);
-                    //guiFrame.add(userPanel);
-                    createAnalystTab(guiFrame.getContentPane());
+                   // createAnalystTab(guiFrame.getContentPane());
+                   createAuditPanel();
+                   guiFrame.add(auditPanel);
+                    guiFrame.revalidate();
+                 // }
+            }
+        });
+        
+        auditButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                 // if (control.CheckUser(loginField, passField)) 
+                    guiFrame.remove(auditPanel);
+                    createAnalystTab(guiFrame.getContentPane());        
                     guiFrame.revalidate();
                  // }
             }
@@ -73,7 +80,7 @@ public class MainForm  {
          final JTabbedPane analystPane = new JTabbedPane();
         
         //Security.
-        JPanel security = new JPanel() {
+        JPanel security = new SecurityLevel() {
             //Make the panel wider than it really needs, so
             //the window's wide enough for the tabs to stay
             //in one row.
@@ -83,15 +90,10 @@ public class MainForm  {
                 return size;
             }
         };
-        security.add(new JLabel("It's coming soon..."));
       
-        // JScrollPane DLPTable = fillTable();
-        //JPanel DLPSystems = new JPanel();
-//        DLPSystems.add(DLPTable);
-//        DLPSystems.add(new JButton("Save"));
-//        DLPSystems.add(new JButton("+"));
-//        DLPSystems.add(new JButton("-"));
+        //security.add(new JLabel("It's coming soon..."));
         
+        //DLP-systems panel CRUD
         JPanel DLPSystems = new DLPSystemsPanel();
         
         
@@ -101,30 +103,11 @@ public class MainForm  {
         pane.add(analystPane, BorderLayout.CENTER);
     }
     
-//    private JScrollPane fillTable() {
-//         Vector columnNames = new Vector();
-//         columnNames.addElement("Title");
-//         columnNames.addElement("Information");
-//         columnNames.addElement("Country");
-//         columnNames.addElement("Offical site");
-//          
-//         Vector data = control.showDLPSystems();
-//           
-//        JTable table = new JTable(data, columnNames);
-//        table.setPreferredScrollableViewportSize(new Dimension(800, 200));
-//        table.setFillsViewportHeight(true);
-//        JScrollPane scrollPane = new JScrollPane(table);
-//        
-//        return scrollPane;
-//    }
+    private void createAuditPanel() {
+        auditPanel = new AuditPanel();
+        auditButton.setBounds(300, 280, 60, 40);
+        auditPanel.add(auditButton);
+    }
     
-//    public void showEntry() {
-//        
-//       if (control.CheckUser(loginField, passField))
-//                control.SayHello(hiLabel);
-//            guiFrame.remove(authPanel);
-//            guiFrame.add(userPanel);
-//            guiFrame.revalidate();
-//    }
 }
 
