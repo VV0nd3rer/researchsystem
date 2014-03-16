@@ -10,11 +10,14 @@ public class MainController {
     private User analyst;
     private DLPSystems dlpSystems;
     private Enterprises enterprises;
+    private SecurityLevel securityLevel;
 
+    private int auditSelected;
+    
     private static MainController instance = null;
     
     public enum TextQuery {
-        DLPSYSTEM, AUDITCLIENT
+        DLPSYSTEM, AUDITCLIENT, SECURITYLEVEL, THREATS
     }
     
     public TextQuery textQuery;
@@ -30,6 +33,7 @@ public class MainController {
         analyst = new User();  
         dlpSystems = new DLPSystems();
         enterprises = new Enterprises();
+        securityLevel = new SecurityLevel();
     }
     
     public boolean CheckUser(JTextField textLogin, JTextField textPass) {
@@ -53,6 +57,11 @@ public class MainController {
             case AUDITCLIENT:
                 res = enterprises.getRecords();
                 break;
+            case SECURITYLEVEL:
+                res = securityLevel.getLevelRecords();
+                break;
+            case THREATS:
+                res = securityLevel.getThreatRecords();
             default:
                 break; 
         }
@@ -67,6 +76,8 @@ public class MainController {
             case AUDITCLIENT:
                 enterprises.updateEnterprise(_num, _data);
                 break;
+            case SECURITYLEVEL:
+                securityLevel.updateRecords(_num, _data, null);
             default:
                 break; 
         }
@@ -97,4 +108,15 @@ public class MainController {
                 break; 
         }
     }
+    public void setAuditSelected(int _num) {
+        auditSelected = _num;
+    }
+    
+    public String getAuditSelected() {
+        Vector res = securityLevel.getSelectedDLP(auditSelected);
+        System.out.println("auditSelected " + auditSelected);
+        System.out.println("getAuditSelected" + res);
+        return res.get(0).toString();
+    }
 }
+

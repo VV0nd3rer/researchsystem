@@ -26,7 +26,6 @@ public class MainForm  {
     private JButton auditButton = new JButton("->");
     
     private MainController control = null;
-        
        
     public MainForm() {
         //Auth panel
@@ -65,12 +64,9 @@ public class MainForm  {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                
-                 // if (control.CheckUser(loginField, passField)) 
                     guiFrame.remove(auditPanel);
                     createAnalystTab(guiFrame.getContentPane());        
                     guiFrame.revalidate();
-                 // }
             }
         });
         
@@ -80,7 +76,7 @@ public class MainForm  {
          final JTabbedPane analystPane = new JTabbedPane();
         
         //Security.
-        JPanel security = new SecurityLevel() {
+        JPanel security = new SecurityLevePanell() {
             //Make the panel wider than it really needs, so
             //the window's wide enough for the tabs to stay
             //in one row.

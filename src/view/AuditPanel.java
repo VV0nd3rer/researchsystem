@@ -14,7 +14,8 @@ public class AuditPanel extends JPanel {
         initComponents();
         tableView = new TablesView(AuditTable);
         showTable();
-        tableView.addModel();
+        tableView.addIdModel();
+        tableView.addListener();
     }
 
     private Vector columnsName() {

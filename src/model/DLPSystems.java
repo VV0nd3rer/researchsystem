@@ -36,8 +36,20 @@ public class DLPSystems extends ModelAction {
 }
   
     private void findDLPSystems() {
-        String findSQL = "SELECT * FROM dlp_systems;";
+        String findSQL = "SELECT * FROM dlp_systems";
         records = findRecords(findSQL);
+//        try {
+//            ResultSet rs = findRecords(findSQL);
+//            while (rs.next()) {
+//                records.add(rs.getString("system_id"));
+//                records.add(rs.getString("title"));
+//                records.add(rs.getString("information"));
+//                records.add(rs.getString("country"));
+//            }
+//        }
+//        catch (SQLException ex) {
+//            System.out.println("Error in findDLPSystems" + ex);
+//        }
     }
     
     public Vector getRecords() {

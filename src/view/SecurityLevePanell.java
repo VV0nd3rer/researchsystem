@@ -1,24 +1,80 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package view;
 
-/**
- *
- * @author Kverchi
- */
-public class SecurityLevel extends javax.swing.JPanel {
+import controller.MainController;
+import java.util.Vector;
 
-    /**
-     * Creates new form SecurityLevel
-     */
-    public SecurityLevel() {
+public class SecurityLevePanell extends javax.swing.JPanel {
+
+   private MainController control = null;
+   private TablesView tableSecurity = null;
+   private TablesView tableThreats = null;
+    
+    public SecurityLevePanell() {
         initComponents();
+        control = MainController.getInstance();
+        tableSecurity = new TablesView(SecurityTable);
+        tableThreats = new TablesView(ThreatTable);
+        
+        showTables();
+        showDLPTitle();
+        tableSecurity.addIdModel();
+        tableThreats.addOtherModel();
     }
 
+    private Vector columnsName(MainController.TextQuery _table) {
+        Vector columnNames = new Vector();     
+        switch (_table) {
+            case SECURITYLEVEL:
+                 columnNames.addElement("Num");
+                 columnNames.addElement("Level");
+                 columnNames.addElement("Description");
+                 columnNames.addElement("Percentage");
+                break;
+            case THREATS:
+                break;
+            default:
+                break;
+        }
+         return columnNames;
+    }
+    
+    private void showDLPTitle() {
+        DLPLabel.setText(control.getAuditSelected());
+    }
+    
+    //TODO like rs.getString("USER_ID");
+    private Vector getOptionalRec(Vector _vec) {
+        Vector res = new Vector();
+         for (int i = 0; i < _vec.size(); i++) {
+             res.add(((Vector) _vec.get(i)).get(1));
+             System.out.println("Columns: " + ((Vector) _vec.get(i)).get(1));
+             System.out.println("res: " + res);
+         } 
+         return res;
+    }
+    
+    private void showTables() {
+        //First table - security level in percentage
+         tableSecurity.data = control.findRecord(control.textQuery.SECURITYLEVEL);
+         tableSecurity.fillTable(columnsName(control.textQuery.SECURITYLEVEL));
+         
+        //Second table - threat analysis
+        Vector rec = new Vector();
+         //Title of columns: 1 group, 2 group, 3 group of level security
+         rec = control.findRecord(control.textQuery.SECURITYLEVEL);
+         Vector threatsCol = getOptionalRec(rec);         
+         //First columns with threats
+         rec = control.findRecord(control.textQuery.THREATS);
+         tableThreats.data = getOptionalRec(rec);
+
+         tableThreats.fillRowHeadTable();
+         tableThreats.fillColumnHeadTable(threatsCol);
+    }
+    
+    private void updateLevel() {
+        control.updateRecord(tableSecurity.changeNum, tableSecurity.data, control.textQuery.SECURITYLEVEL);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,7 +89,7 @@ public class SecurityLevel extends javax.swing.JPanel {
         DLPLabel = new javax.swing.JLabel();
         SecurityClassLabel = new javax.swing.JLabel();
         SecurityScrollPane = new javax.swing.JScrollPane();
-        SecurityClassTable = new javax.swing.JTable();
+        SecurityTable = new javax.swing.JTable();
         SecurityButton = new javax.swing.JButton();
         ThreatLabel = new javax.swing.JLabel();
         ThreatScrollPane = new javax.swing.JScrollPane();
@@ -46,7 +102,7 @@ public class SecurityLevel extends javax.swing.JPanel {
 
         SecurityClassLabel.setText("Percentage of system accessories to the classes of security");
 
-        SecurityClassTable.setModel(new javax.swing.table.DefaultTableModel(
+        SecurityTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -57,9 +113,14 @@ public class SecurityLevel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        SecurityScrollPane.setViewportView(SecurityClassTable);
+        SecurityScrollPane.setViewportView(SecurityTable);
 
         SecurityButton.setText("Update");
+        SecurityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SecurityButtonActionPerformed(evt);
+            }
+        });
 
         ThreatLabel.setText("Threat analysis");
 
@@ -146,14 +207,18 @@ public class SecurityLevel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_ThreatUpdateActionPerformed
 
+    private void SecurityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SecurityButtonActionPerformed
+        
+    }//GEN-LAST:event_SecurityButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel DLPLabel;
     private javax.swing.JLabel IllustrationLabel;
     private javax.swing.JButton SecurityButton;
     private javax.swing.JLabel SecurityClassLabel;
-    private javax.swing.JTable SecurityClassTable;
     private javax.swing.JScrollPane SecurityScrollPane;
+    private javax.swing.JTable SecurityTable;
     private javax.swing.JPanel StatisticsPanel;
     private javax.swing.JLabel ThreatLabel;
     private javax.swing.JScrollPane ThreatScrollPane;

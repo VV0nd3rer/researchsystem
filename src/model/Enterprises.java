@@ -1,6 +1,8 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
 
 public class Enterprises extends ModelAction {
@@ -12,9 +14,31 @@ public class Enterprises extends ModelAction {
     }
     
     private void findEnterprises() {
-        String findSQL = "SELECT enterprise_id, name, system_id, title FROM enterprises, dlp_systems where "
-                + "enterprises.start_dlp_id = dlp_systems.system_id";
+        String findSQL = "SELECT * FROM audits";
         records = findRecords(findSQL);
+    }
+    
+    private void findAudits() {
+        String findSQL = "SELECT *  FROM audits, enterprises, dlp_systems, security_level " +
+                             "where audits.enterprise_id = enterprises.enterprise_id and " +
+                             "audits.start_dlp_id = dlp_systems.system_id and " +
+                             "audits.start_level_id = security_level.level_id";
+        records = findRecords(findSQL);
+        for (int i = 0; i < records.size(); i ++) {
+            //
+        }
+//        ResultSet rs = findRec(findSQL);
+//        try {
+//             while (rs.next()) {
+//               records.add(rs.getString("name"));
+//               records.add(rs.getString("title"));
+//               records.add(rs.getString("level"));
+//             }
+//        }
+//        catch (SQLException ex) {
+//            
+//        }
+       
     }
     
     public void updateEnterprise(Vector _num, Vector _data) {
@@ -37,7 +61,7 @@ public class Enterprises extends ModelAction {
     }
     
     public Vector getRecords() {
-        findEnterprises();
+        findAudits();
         return records;
     }
     

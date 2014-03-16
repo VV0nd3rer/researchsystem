@@ -19,7 +19,7 @@ public class DLPSystemsPanel extends JPanel {
         initComponents();
         tableView = new TablesView(DLPTable);
         showTable();
-        tableView.addModel();
+        tableView.addIdModel();
     }
     
     private Vector columnsName() {
@@ -32,7 +32,7 @@ public class DLPSystemsPanel extends JPanel {
          return columnNames;
     }
     
-    private void showTable() {
+    private void showTable(){
          tableView.data = control.findRecord(control.textQuery.DLPSYSTEM);
          tableView.fillTable(columnsName());
    }
@@ -109,7 +109,7 @@ public class DLPSystemsPanel extends JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(183, Short.MAX_VALUE)
+                .addContainerGap(83, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(DLPScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -131,7 +131,7 @@ public class DLPSystemsPanel extends JPanel {
                     .addComponent(SaveButton)
                     .addComponent(DeleteButton)
                     .addComponent(NewButton))
-                .addGap(0, 43, Short.MAX_VALUE))
+                .addGap(0, 30, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     
