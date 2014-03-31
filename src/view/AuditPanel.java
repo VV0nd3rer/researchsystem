@@ -2,7 +2,6 @@ package view;
 
 import controller.MainController;
 import java.util.Vector;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 public class AuditPanel extends JPanel {
@@ -14,45 +13,33 @@ public class AuditPanel extends JPanel {
         initComponents();
         tableView = new TablesView(AuditTable);
         showTable();
-        tableView.addIdModel();
-        tableView.addListener();
+        loadEnterprisesComboBox();
+        //tableView.addIdModel();
+        //tableView.addListener();
     }
 
     private Vector columnsName() {
         Vector columnNames = new Vector();     
          columnNames.addElement("Num");
          columnNames.addElement("Name");
-         columnNames.addElement("Num DLP");
-         columnNames.addElement("Title");
+         columnNames.addElement("Level");
          return columnNames;
     }
     
      private void showTable() {
          tableView.data = control.findRecord(control.textQuery.AUDITCLIENT);
-         tableView.fillTable(columnsName());
+         tableView.columns = columnsName();
+         tableView.fillTable();
     }
     
-    private void addClient() {
-        tableView.addRow();
-    }
-
-    private void saveClient() {
-       boolean isNew = false;
-       for (int i = 0; i < tableView.changeNum.size(); i++) {
-           if (tableView.changeNum.get(i) == "") {
-                isNew = true;
-           }        
-       }
-       if (isNew)
-           control.createRecord(tableView.data, control.textQuery.AUDITCLIENT);
-       else 
-          control.updateRecord(tableView.changeNum, tableView.data, control.textQuery.AUDITCLIENT);
-    }
-     
-    private void deleteClient() {
-        int delNum = (Integer)((Vector)tableView.data.get(AuditTable.getSelectedRow())).get(0);
-        control.deleteRecord(delNum, control.textQuery.AUDITCLIENT);
-        tableView.deleteRow();
+    private void loadEnterprisesComboBox() {
+        Vector res = control.findRecord(control.textQuery.ENTERPRISES);
+        for (int i = 0; i < res.size(); i++ ) {
+            int index = (Integer)((Vector)res.get(i)).get(0);
+            String value = ((Vector)res.get(i)).get(1).toString();
+                                     
+            EnterprisesComboBox.addItem(new Item(index, value));
+        }
     }
     
     /**
@@ -67,9 +54,10 @@ public class AuditPanel extends JPanel {
         AuditScrollPane = new javax.swing.JScrollPane();
         AuditTable = new javax.swing.JTable();
         AuditLabel = new javax.swing.JLabel();
-        SaveButton = new javax.swing.JButton();
-        DeleteButton = new javax.swing.JButton();
-        NewButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        EnterprisesComboBox = new javax.swing.JComboBox();
+
+        setMaximumSize(null);
 
         AuditTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -84,26 +72,13 @@ public class AuditPanel extends JPanel {
         ));
         AuditScrollPane.setViewportView(AuditTable);
 
-        AuditLabel.setText("Audit");
+        AuditLabel.setText("Audits");
 
-        SaveButton.setText("Save");
-        SaveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveButtonActionPerformed(evt);
-            }
-        });
+        jLabel1.setText("Новый аудит");
 
-        DeleteButton.setText("Delete");
-        DeleteButton.addActionListener(new java.awt.event.ActionListener() {
+        EnterprisesComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DeleteButtonActionPerformed(evt);
-            }
-        });
-
-        NewButton.setText("New");
-        NewButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewButtonActionPerformed(evt);
+                EnterprisesComboBoxActionPerformed(evt);
             }
         });
 
@@ -112,55 +87,68 @@ public class AuditPanel extends JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(AuditLabel)
-                    .addComponent(AuditScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(41, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(SaveButton)
-                .addGap(18, 18, 18)
-                .addComponent(DeleteButton)
-                .addGap(26, 26, 26)
-                .addComponent(NewButton)
-                .addGap(72, 72, 72))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(AuditScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(AuditLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(213, 213, 213)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(EnterprisesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))))
+                .addContainerGap(339, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(62, 62, 62)
                 .addComponent(AuditLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(AuditScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(AuditScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SaveButton)
-                    .addComponent(DeleteButton)
-                    .addComponent(NewButton))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addComponent(EnterprisesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(235, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void NewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewButtonActionPerformed
-        addClient();
-    }//GEN-LAST:event_NewButtonActionPerformed
-
-    private void SaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButtonActionPerformed
-        saveClient();
-    }//GEN-LAST:event_SaveButtonActionPerformed
-
-    private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
-        deleteClient();
-    }//GEN-LAST:event_DeleteButtonActionPerformed
-
-
+    private void EnterprisesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterprisesComboBoxActionPerformed
+       if (evt.getSource().equals(EnterprisesComboBox)) {
+         EnterprisesComboBox = (JComboBox) evt.getSource();
+         Item item = (Item) EnterprisesComboBox.getSelectedItem();
+         if(item!=null){
+              System.out.println("Database Index:"+item.getId());
+         }
+   }
+    }//GEN-LAST:event_EnterprisesComboBoxActionPerformed
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AuditLabel;
     private javax.swing.JScrollPane AuditScrollPane;
     private javax.swing.JTable AuditTable;
-    private javax.swing.JButton DeleteButton;
-    private javax.swing.JButton NewButton;
-    private javax.swing.JButton SaveButton;
+    private javax.swing.JComboBox EnterprisesComboBox;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
+}
+
+ class Item {
+        private int id;
+        private String description;
+        public Item(int id, String description) {
+            this.id = id;
+            this.description = description;
+        }
+        public int getId() {
+            return id;
+        }
+        public String getDescription() {
+            return description;
+        }
+        public String toString() {
+            return description;
+        }
 }

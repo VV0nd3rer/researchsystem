@@ -7,17 +7,17 @@ import model.*;
   
 
 public class MainController {
-    private User analyst;
-    private DLPSystems dlpSystems;
+    private User user;
+
     private Enterprises enterprises;
     private SecurityLevel securityLevel;
-
-    private int auditSelected;
+    private InputParameters inputParam;
     
     private static MainController instance = null;
     
     public enum TextQuery {
-        DLPSYSTEM, AUDITCLIENT, SECURITYLEVEL, THREATS
+         AUDITCLIENT, SECURITYLEVEL, THREATS, ENTERPRISES,
+        RESEARCH, DATA, COMPETENCE
     }
     
     public TextQuery textQuery;
@@ -30,18 +30,18 @@ public class MainController {
      }
     
     public MainController() {
-        analyst = new User();  
-        dlpSystems = new DLPSystems();
+        user = new User();  
         enterprises = new Enterprises();
         securityLevel = new SecurityLevel();
+        inputParam = new InputParameters();
     }
     
     public boolean CheckUser(JTextField textLogin, JTextField textPass) {
-        analyst.setLogin(textLogin.getText());
-        analyst.setPass(textPass.getText());
-        analyst.findUser();
-        if (analyst.getUserId() != 0) {
-            System.out.println("Hello, " + analyst.getUserName());
+        user.setLogin(textLogin.getText());
+        user.setPass(textPass.getText());
+        user.findUser();
+        if (user.getUserId() != 0) {
+            System.out.println("Hello, " + user.getUserName());
             return true;
         }
         else 
@@ -51,72 +51,73 @@ public class MainController {
     public Vector findRecord(TextQuery _table) {
         Vector res = new Vector();
         switch (_table) {
-            case DLPSYSTEM:
-                res = dlpSystems.getRecords();
+            case DATA:
+                res = inputParam.getInputParameters();
+                break;
+            case COMPETENCE:
+                res = user.getExperts();
                 break;
             case AUDITCLIENT:
-                res = enterprises.getRecords();
+                res = enterprises.getAudits();
                 break;
             case SECURITYLEVEL:
                 res = securityLevel.getLevelRecords();
                 break;
             case THREATS:
                 res = securityLevel.getThreatRecords();
+                break;
+            case ENTERPRISES:
+                res = enterprises.getEnterprises();
+                break;
+            case RESEARCH:
+                res = enterprises.getResearches();
+                break;
             default:
                 break; 
         }
          return res;
     }
     
-    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
-       switch (_table) {
-            case DLPSYSTEM:
-                dlpSystems.updateDLPSystems(_num, _data);
-                break;
-            case AUDITCLIENT:
-                enterprises.updateEnterprise(_num, _data);
-                break;
-            case SECURITYLEVEL:
-                securityLevel.updateRecords(_num, _data, null);
-            default:
-                break; 
-        }
-    }
-    
-    public void createRecord(Vector _data, TextQuery _table) {
-         switch (_table) {
-            case DLPSYSTEM:
-                dlpSystems.createDLPSystems(_data);
-                break;
-            case AUDITCLIENT:
-                enterprises.createEnterprise(_data);
-                break;
-            default:
-                break; 
-        }
-    }
-    
-    public void deleteRecord(int _num, TextQuery _table) {
-        switch (_table) {
-            case DLPSYSTEM:
-                dlpSystems.deleteDLPSystem(_num);
-                break;
-            case AUDITCLIENT:
-                enterprises.deleteEnterprise(_num);
-                break;
-            default:
-                break; 
-        }
-    }
-    public void setAuditSelected(int _num) {
-        auditSelected = _num;
-    }
-    
-    public String getAuditSelected() {
-        Vector res = securityLevel.getSelectedDLP(auditSelected);
-        System.out.println("auditSelected " + auditSelected);
-        System.out.println("getAuditSelected" + res);
-        return res.get(0).toString();
-    }
+//    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
+//       switch (_table) {
+//            case DLPSYSTEM:
+//                dlpSystems.updateDLPSystems(_num, _data);
+//                break;
+//            case AUDITCLIENT:
+//                enterprises.updateEnterprise(_num, _data);
+//                break;
+//            case SECURITYLEVEL:
+//                securityLevel.updateRecords(_num, _data, null);
+//            default:
+//                break; 
+//        }
+//    }
+//    
+//    public void createRecord(Vector _data, TextQuery _table) {
+//         switch (_table) {
+//            case DLPSYSTEM:
+//                dlpSystems.createDLPSystems(_data);
+//                break;
+//            case AUDITCLIENT:
+//                enterprises.createEnterprise(_data);
+//                break;
+//            default:
+//                break; 
+//        }
+//    }
+//    
+//    public void deleteRecord(int _num, TextQuery _table) {
+//        switch (_table) {
+//            case DLPSYSTEM:
+//                dlpSystems.deleteDLPSystem(_num);
+//                break;
+//            case AUDITCLIENT:
+//                enterprises.deleteEnterprise(_num);
+//                break;
+//            default:
+//                break; 
+//        }
+//    }
+
 }
 

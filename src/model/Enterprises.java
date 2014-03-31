@@ -6,41 +6,27 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 public class Enterprises extends ModelAction {
-    Connection connection = null;
-    Vector records = new Vector(); 
-    
-    public Enterprises() {
-        connection = ConnectionDB.getInstance().getConnection();
+      
+    private Vector findEnterprises() {
+        sqlQuery = "SELECT * FROM enterprises";
+        records = findRecords(sqlQuery);
+        return records;
     }
     
-    private void findEnterprises() {
-        String findSQL = "SELECT * FROM audits";
-        records = findRecords(findSQL);
+    private Vector findAudits() {
+        sqlQuery = "SELECT audit_id, enterprises.name, security_level.level FROM research.audits, enterprises, security_level " +
+                        "where audits.enterprise_id = enterprises.enterprise_id and " +
+                        "audits.level_id = security_level.level_id";
+        records = findRecords(sqlQuery);
+        return records;
     }
-    
-    private void findAudits() {
-        String findSQL = "SELECT *  FROM audits, enterprises, dlp_systems, security_level " +
-                             "where audits.enterprise_id = enterprises.enterprise_id and " +
-                             "audits.start_dlp_id = dlp_systems.system_id and " +
-                             "audits.start_level_id = security_level.level_id";
-        records = findRecords(findSQL);
-        for (int i = 0; i < records.size(); i ++) {
-            //
-        }
-//        ResultSet rs = findRec(findSQL);
-//        try {
-//             while (rs.next()) {
-//               records.add(rs.getString("name"));
-//               records.add(rs.getString("title"));
-//               records.add(rs.getString("level"));
-//             }
-//        }
-//        catch (SQLException ex) {
-//            
-//        }
-       
+    private Vector findResearches() {
+        sqlQuery = "SELECT research_id, name, title, is_done  FROM researches, enterprises, dlp_systems " +
+                        "where researches.enterprise_id = enterprises.enterprise_id and " +
+                        "researches.system_id = dlp_systems.system_id";
+        records = findRecords(sqlQuery);
+        return records;
     }
-    
     public void updateEnterprise(Vector _num, Vector _data) {
         //Update composite table
 //        String userQuery = "UPDATE enterprises "
@@ -60,9 +46,14 @@ public class Enterprises extends ModelAction {
 //         deleteRecord(_num, userQuery);
     }
     
-    public Vector getRecords() {
-        findAudits();
-        return records;
+    public Vector getAudits() {
+        return findAudits();
+    }
+    public Vector getResearches() {
+        return findResearches();
+    }
+    public Vector getEnterprises() {
+        return findEnterprises();
     }
     
 }

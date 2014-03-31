@@ -9,24 +9,24 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 public class MainForm  {
-    final static String SECURITYPANEL = "Security";
-    final static String DLPPANEL = "DLP-systems";
     final static int extraWindowWidth = 100;
     //The main frame for all panels
     private JFrame guiFrame = new JFrame();
     //Panels for authentification, 
     private JPanel authPanel = new JPanel();
-    private JPanel userPanel = new JPanel();
+    //private JPanel userPanel = new JPanel();
     private JPanel auditPanel = null;
+    private JPanel researchPanel = null;
+    private JPanel securityLevelPanel = null;
+    private JPanel dataPanel = null;
+    private JPanel competencePanel = null;
     
     private JTextField loginField = new JTextField();
     private JTextField passField = new JTextField();
   
     private JButton loginButton = new  JButton("Ok");
     private JButton auditButton = new JButton("->");
-    
-    private MainController control = null;
-       
+           
     public MainForm() {
         //Auth panel
         authPanel.setLayout(null);
@@ -36,8 +36,6 @@ public class MainForm  {
         authPanel.add(loginField);
         authPanel.add(passField);
         authPanel.add(loginButton);
-        
-        control = MainController.getInstance();
         
         guiFrame.add(authPanel);
         guiFrame.setSize(300,300);
@@ -53,9 +51,10 @@ public class MainForm  {
                  // if (control.CheckUser(loginField, passField)) 
                     guiFrame.remove(authPanel);
                    // createAnalystTab(guiFrame.getContentPane());
-                   createAuditPanel();
-                   guiFrame.add(auditPanel);
-                    guiFrame.revalidate();
+                   createTabbled();
+                   //guiFrame.add(auditPanel);
+                   guiFrame.setSize(700,700);
+                   guiFrame.revalidate();
                  // }
             }
         });
@@ -65,44 +64,77 @@ public class MainForm  {
             @Override
             public void actionPerformed(ActionEvent e) {
                     guiFrame.remove(auditPanel);
-                    createAnalystTab(guiFrame.getContentPane());        
+                    //createAnalystTab(guiFrame.getContentPane()); 
+                    createSucuretyLevelPanel();
+                    guiFrame.add(securityLevelPanel);
                     guiFrame.revalidate();
             }
         });
         
  }
     
-    private void createAnalystTab(Container pane) {
-         final JTabbedPane analystPane = new JTabbedPane();
-        
-        //Security.
-        JPanel security = new SecurityLevePanell() {
-            //Make the panel wider than it really needs, so
-            //the window's wide enough for the tabs to stay
-            //in one row.
-            public Dimension getPreferredSize() {
-                Dimension size = super.getPreferredSize();
-                size.width += extraWindowWidth;
-                return size;
-            }
-        };
-      
-        //security.add(new JLabel("It's coming soon..."));
-        
-        //DLP-systems panel CRUD
-        JPanel DLPSystems = new DLPSystemsPanel();
+    private void createTabbled() {
+        final JTabbedPane panels = new JTabbedPane();
+        createAuditPanel();
+        createResearchPanel();
+        createDataPanel();
+        createCompetencePanel();
+        panels.addTab("Audits", auditPanel);
+        panels.addTab("Researches", researchPanel);
+        panels.addTab("Data", dataPanel);
+        panels.addTab("Competence", competencePanel);
+        guiFrame.getContentPane().add(panels, BorderLayout.CENTER);
         
         
-        analystPane.addTab(SECURITYPANEL, security);
-        analystPane.addTab(DLPPANEL, DLPSystems);
- 
-        pane.add(analystPane, BorderLayout.CENTER);
     }
+    //Пример, как делать меню - табуляцию
+    
+//    private void createAnalystTab(Container pane) {
+//         final JTabbedPane analystPane = new JTabbedPane();
+//        
+//        //Security.
+//        JPanel security = new SecurityLevePanell() {
+//            //Make the panel wider than it really needs, so
+//            //the window's wide enough for the tabs to stay
+//            //in one row.
+//            public Dimension getPreferredSize() {
+//                Dimension size = super.getPreferredSize();
+//                size.width += extraWindowWidth;
+//                return size;
+//            }
+//        };
+//      
+//        //security.add(new JLabel("It's coming soon..."));
+//        
+//        //DLP-systems panel CRUD
+//        JPanel DLPSystems = new DLPSystemsPanel();
+//        
+//        
+//        analystPane.addTab(SECURITYPANEL, security);
+//        analystPane.addTab(DLPPANEL, DLPSystems);
+// 
+//        pane.add(analystPane, BorderLayout.CENTER);
+//    }
     
     private void createAuditPanel() {
         auditPanel = new AuditPanel();
-        auditButton.setBounds(300, 280, 60, 40);
+        auditButton.setBounds(220, 380, 50, 30);
         auditPanel.add(auditButton);
+    }
+    private void createResearchPanel() {
+        researchPanel = new ResearchPanel();
+    }
+    private void createDataPanel() {
+        dataPanel = new DataPanel();
+    }
+    private void createCompetencePanel() {
+        competencePanel = new CompetencePanel();
+    }
+    private void createSucuretyLevelPanel() {
+        //Контроллер - занести выбранное предприятие и начать определение ур-ня безопасности
+        //ИС предприятия используя байесовский метод
+        
+        securityLevelPanel = new SecurityLevePanel();
     }
     
 }

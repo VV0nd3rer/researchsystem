@@ -14,7 +14,7 @@ public class SecurityLevel extends ModelAction {
     }
     
     private void findSecurityLevel() {
-        String findSQL = "SELECT * from security_level";
+        String findSQL = "SELECT * from security_level where level_id < 4";
         records = findRecords(findSQL);
 //        try {
 //            ResultSet rs = findRecords(findSQL);

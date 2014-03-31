@@ -3,7 +3,7 @@ package model;
 import java.sql.*;
 import java.util.*;
 
-public class User {
+public class User extends ModelAction {
     private
         Connection connection = null;
         String login;
@@ -37,7 +37,14 @@ public class User {
              System.out.println("Error in findUser method");
         }
   }
-      
+    private Vector findExperts() {
+        sqlQuery = "SELECT * FROM experts";
+        records = findRecords(sqlQuery);
+        return records;
+    }
+    public Vector getExperts() {
+        return findExperts();
+    }
     public String getLogin() {
         return login;
     }

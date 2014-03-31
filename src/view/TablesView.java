@@ -42,7 +42,8 @@ public class TablesView {
      private JTable table = null;
      public DefaultTableModel DLPModel = null;
      public Vector changeNum = new Vector();
-     public  Vector data = null;
+     public Vector data = null;
+     public Vector columns = null;
      ListSelectionModel selectionModel = null;
      private MainController control = null;
  
@@ -51,29 +52,17 @@ public class TablesView {
          table = _table;
      }
      
-     //For tables with need id for changed
-     public void addIdModel() {
+     public void addModel() {
           //DLPModel.addTableModelListener(this);    
          table.getModel().addTableModelListener(new TableModelListener() {
 
              @Override
              public void tableChanged(TableModelEvent e) {
-                tableIdChanged(e);
+                tableChanged(e);
              }
          });
      }
      
-     //For tables with other ways to change data
-     public void addOtherModel() {
-         table.getModel().addTableModelListener(new TableModelListener() {
-
-             @Override
-             public void tableChanged(TableModelEvent e) {
-                 tableOtherChanged(e);
-             }
-         });
-     }
-    
      public void addListener() {
          selectionModel = table.getSelectionModel();
          selectionModel.addListSelectionListener(new ListSelectionListener() {
@@ -86,31 +75,28 @@ public class TablesView {
      public void selectValue(ListSelectionEvent e) {
          int row = table.getSelectedRow();
          System.out.println("Selected dlp: " + table.getValueAt(row, 2).toString());
-         control.setAuditSelected((Integer)table.getValueAt(row, 2));
+         //control.setAuditSelected((Integer)table.getValueAt(row, 2));
       }
 
-     public void tableIdChanged(TableModelEvent e) {
+     public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow(); 
                 int column = e.getColumn();
                 TableModel model = (TableModel)e.getSource();
                 if (column != -1) { 
                     Object res = model.getValueAt(row, column);
-                    if (model.getValueAt(row, 0) == "")
-                        changeNum.add("");
-                    else
-                        changeNum.add(((Vector)data.get(row)).get(0));
-                    System.out.println("Before add data: " + data.get(row).toString());
+//                    if (model.getValueAt(row, 0) == "")
+//                        changeNum.add("");
+//                    else
+//                        changeNum.add(((Vector)data.get(row)).get(0));
+//                    System.out.println("Before add data: " + data.get(row).toString());
                     ((Vector)data.get(row)).set(column, res);
                     System.out.println("Added data: " + data.get(row).toString());      
         }
    }
      
-     public void tableOtherChanged(TableModelEvent e) {
-         System.out.println("oops, but name of this function is very bad :(");
-     }
-     
-     public void fillTable(Vector _columnsNames) {
-         table.setModel(new DefaultTableModel(data, _columnsNames));
+
+     public void fillTable() {
+         table.setModel(new DefaultTableModel(data, columns));
          DLPModel = (DefaultTableModel)table.getModel();
      }
      
