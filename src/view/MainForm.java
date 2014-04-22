@@ -10,6 +10,7 @@ import java.util.Vector;
 
 public class MainForm  {
     final static int extraWindowWidth = 100;
+    private MainController control = null;
     //The main frame for all panels
     private JFrame guiFrame = new JFrame();
     //Panels for authentification, 
@@ -17,9 +18,10 @@ public class MainForm  {
     //private JPanel userPanel = new JPanel();
     private JPanel auditPanel = null;
     private JPanel researchPanel = null;
-    private JPanel securityLevelPanel = null;
+//    private JPanel securityLevelPanel = null;
     private JPanel dataPanel = null;
     private JPanel competencePanel = null;
+//    private JTabbedPane mainPanels = new JTabbedPane();
     
     private JTextField loginField = new JTextField();
     private JTextField passField = new JTextField();
@@ -28,6 +30,7 @@ public class MainForm  {
     private JButton auditButton = new JButton("->");
            
     public MainForm() {
+        control = MainController.getInstance();
         //Auth panel
         authPanel.setLayout(null);
         loginField.setBounds(15,15, 150, 25);
@@ -38,7 +41,7 @@ public class MainForm  {
         authPanel.add(loginButton);
         
         guiFrame.add(authPanel);
-        guiFrame.setSize(300,300);
+        setFrameSize(300, 300);
         guiFrame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         
         guiFrame.setVisible(true);
@@ -51,9 +54,9 @@ public class MainForm  {
                  // if (control.CheckUser(loginField, passField)) 
                     guiFrame.remove(authPanel);
                    // createAnalystTab(guiFrame.getContentPane());
-                   createTabbled();
+                   createPanels();
                    //guiFrame.add(auditPanel);
-                   guiFrame.setSize(700,700);
+                   setFrameSize(700, 700);
                    guiFrame.revalidate();
                  // }
             }
@@ -63,29 +66,30 @@ public class MainForm  {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                    guiFrame.remove(auditPanel);
-                    //createAnalystTab(guiFrame.getContentPane()); 
+                    control.hidePanels();
+                    setFrameSize(1000, 700);
                     createSucuretyLevelPanel();
-                    guiFrame.add(securityLevelPanel);
+                    guiFrame.add(control.getSecurityLevelPanel());
                     guiFrame.revalidate();
             }
         });
         
  }
     
-    private void createTabbled() {
-        final JTabbedPane panels = new JTabbedPane();
+    private void createPanels() {
         createAuditPanel();
         createResearchPanel();
         createDataPanel();
         createCompetencePanel();
-        panels.addTab("Audits", auditPanel);
-        panels.addTab("Researches", researchPanel);
-        panels.addTab("Data", dataPanel);
-        panels.addTab("Competence", competencePanel);
-        guiFrame.getContentPane().add(panels, BorderLayout.CENTER);
-        
-        
+        control.getTabPanels().addTab("Audits", auditPanel);
+        control.getTabPanels().addTab("Researches", researchPanel);
+        control.getTabPanels().addTab("Data", dataPanel);
+        control.getTabPanels().addTab("Competence", competencePanel);
+        guiFrame.getContentPane().add(control.getTabPanels(), BorderLayout.CENTER);
+    }
+   
+    private void setFrameSize(int w, int h) {
+        guiFrame.setSize(w, h);
     }
     //Пример, как делать меню - табуляцию
     
@@ -133,8 +137,7 @@ public class MainForm  {
     private void createSucuretyLevelPanel() {
         //Контроллер - занести выбранное предприятие и начать определение ур-ня безопасности
         //ИС предприятия используя байесовский метод
-        
-        securityLevelPanel = new SecurityLevePanel();
+        control.setSecurityLevelPanel(new SecurityLevePanel());
     }
     
 }

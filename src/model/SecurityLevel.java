@@ -29,7 +29,7 @@ public class SecurityLevel extends ModelAction {
     }
     
     private void findThreats() {
-        String findSQL = "SELECT * FROM criterias";
+        String findSQL = "SELECT * FROM threats";
         records = findRecords(findSQL);
     }
     

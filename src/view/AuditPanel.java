@@ -33,13 +33,7 @@ public class AuditPanel extends JPanel {
     }
     
     private void loadEnterprisesComboBox() {
-        Vector res = control.findRecord(control.textQuery.ENTERPRISES);
-        for (int i = 0; i < res.size(); i++ ) {
-            int index = (Integer)((Vector)res.get(i)).get(0);
-            String value = ((Vector)res.get(i)).get(1).toString();
-                                     
-            EnterprisesComboBox.addItem(new Item(index, value));
-        }
+        control.loadComboBox(control.textQuery.ENTERPRISES, EnterprisesComboBox);
     }
     
     /**
@@ -117,13 +111,8 @@ public class AuditPanel extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void EnterprisesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterprisesComboBoxActionPerformed
-       if (evt.getSource().equals(EnterprisesComboBox)) {
-         EnterprisesComboBox = (JComboBox) evt.getSource();
-         Item item = (Item) EnterprisesComboBox.getSelectedItem();
-         if(item!=null){
-              System.out.println("Database Index:"+item.getId());
-         }
-   }
+      System.out.println(control.getComboBoxId(evt, EnterprisesComboBox));
+      System.out.println(control.getComboBoxValue(evt, EnterprisesComboBox));
     }//GEN-LAST:event_EnterprisesComboBoxActionPerformed
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -135,20 +124,20 @@ public class AuditPanel extends JPanel {
     // End of variables declaration//GEN-END:variables
 }
 
- class Item {
-        private int id;
-        private String description;
-        public Item(int id, String description) {
-            this.id = id;
-            this.description = description;
-        }
-        public int getId() {
-            return id;
-        }
-        public String getDescription() {
-            return description;
-        }
-        public String toString() {
-            return description;
-        }
-}
+// class Item {
+//        private int id;
+//        private String description;
+//        public Item(int id, String description) {
+//            this.id = id;
+//            this.description = description;
+//        }
+//        public int getId() {
+//            return id;
+//        }
+//        public String getDescription() {
+//            return description;
+//        }
+//        public String toString() {
+//            return description;
+//        }
+//}
