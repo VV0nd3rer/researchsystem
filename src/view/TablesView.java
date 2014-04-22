@@ -62,6 +62,7 @@ public class TablesView {
              }
          });
      }
+      //Show edited row in the table
        public void changeRow(TableModelEvent e, MainController.TextQuery type) {
                 int row = e.getFirstRow(); 
                 int column = e.getColumn();
@@ -95,6 +96,7 @@ public class TablesView {
           });
      }
      
+     //Show number of selected row in the table
      public void selectValue(ListSelectionEvent e) {
          if (e.getValueIsAdjusting())
              return;
