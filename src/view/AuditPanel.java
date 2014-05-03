@@ -23,47 +23,55 @@ public class AuditPanel extends JPanel implements ITableView {
     private MainController control = null;
     public DefaultTableModel defaultTableModel = null;
     
-    public Vector data = null;
-    public Vector columns = null;
-    
+//    private Vector data = null;
+//    private Vector columns = null;
+     
     public AuditPanel() {
         control = MainController.getInstance();
         initComponents();
-        //tableView = new TablesView(AuditTable);
         showTable();
         loadEnterprisesComboBox();
-        addChangeListener();
-        addSelectListener();
-        //tableView.addIdModel();
-        //tableView.addListener();
+//        addChangeListener();
+//        addSelectListener();
     }
     
     //------------------ ITable interfaces methods ---------------------------//
-    public void addChangeListener() {
-        AuditTable.getModel().addTableModelListener(new TableModelListener() {
+    public void addChangeListener (final MainController.TextQuery type) {
+        determineTable(type).getModel().addTableModelListener(new TableModelListener() {
             @Override
              public void tableChanged(TableModelEvent e) {
-                changeRow(e);
+                changeRow(e, type);
              }
         });
     }
-    public void addSelectListener() {
-        AuditTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+    public void addSelectListener(final MainController.TextQuery type) {
+        determineTable(type).getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-               selectRow(e);
+               selectRow(e, type);
             }
         });
     }
-    public void changeRow(TableModelEvent e) {
+    public void changeRow(TableModelEvent e, MainController.TextQuery type) {
         System.out.println("changeRow method");
     }
-    public void selectRow(ListSelectionEvent e) {
+    public void selectRow(ListSelectionEvent e, MainController.TextQuery type) {
         System.out.println("selectRow method");
     }
-    public void fillTable() {
+    public void fillTable(JTable table, Vector data, Vector columns) {
       AuditTable.setModel(new DefaultTableModel(data, columns));
       defaultTableModel = (DefaultTableModel)AuditTable.getModel();
+    }
+    public JTable determineTable(MainController.TextQuery type) {
+         JTable table = null;
+        switch(type) {
+            case AUDITCLIENT:
+                    table = AuditTable;
+                    break;
+            default:
+                    break;  
+        }
+        return table;
     }
     //------------------------------------------------------------------//
     
@@ -76,9 +84,7 @@ public class AuditPanel extends JPanel implements ITableView {
     }
     
      private void showTable() {
-         data = control.findRecord(control.textQuery.AUDITCLIENT);
-         columns = columnsName();
-         fillTable();
+         fillTable(AuditTable, control.findRecord(control.textQuery.AUDITCLIENT), columnsName());
     }
     
     private void loadEnterprisesComboBox() {
@@ -95,7 +101,11 @@ public class AuditPanel extends JPanel implements ITableView {
     private void initComponents() {
 
         AuditScrollPane = new javax.swing.JScrollPane();
-        AuditTable = new javax.swing.JTable();
+        AuditTable = new JTable() {
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false;
+            }
+        };
         AuditLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         EnterprisesComboBox = new javax.swing.JComboBox();
@@ -112,7 +122,15 @@ public class AuditPanel extends JPanel implements ITableView {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         AuditScrollPane.setViewportView(AuditTable);
 
         AuditLabel.setText("Audits");
@@ -160,8 +178,11 @@ public class AuditPanel extends JPanel implements ITableView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void EnterprisesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterprisesComboBoxActionPerformed
-      System.out.println(control.getComboBoxId(evt, EnterprisesComboBox));
-      System.out.println(control.getComboBoxValue(evt, EnterprisesComboBox));
+//      System.out.println(control.getComboBoxId(evt, EnterprisesComboBox));
+//      System.out.println(control.getComboBoxValue(evt, EnterprisesComboBox));
+//      String name = control.getComboBoxValue(evt, EnterprisesComboBox);
+      control.selectEnterpriseId(control.getComboBoxId(evt, EnterprisesComboBox));
+      control.selectEnterpriseName(control.getComboBoxValue(evt, EnterprisesComboBox));
     }//GEN-LAST:event_EnterprisesComboBoxActionPerformed
    
     // Variables declaration - do not modify//GEN-BEGIN:variables

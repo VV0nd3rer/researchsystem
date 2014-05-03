@@ -39,6 +39,20 @@ public class ModelAction {
              System.out.println("Error in editDLPSystems method");
         }
     }
+    public void createForeignRecord(Vector _data, String _sql) {
+        PreparedStatement userStmt = null;
+        
+        try {
+            userStmt = connection.prepareStatement(_sql);
+            for (int i = 0; i < _data.size(); i ++) {
+                 userStmt.setInt( i+1, (Integer)_data.get(i));
+            }
+             userStmt.executeUpdate();     
+        }
+        catch(SQLException ex) {
+             System.out.println("Error in createRecord method");
+        }
+    }
     public void createRecord(Vector _data, String _sql) {
         PreparedStatement userStmt = null;
         

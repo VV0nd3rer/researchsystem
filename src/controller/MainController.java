@@ -26,15 +26,13 @@ import model.*;
 }
 
 public class MainController {
-    private User user;
-
-    
-    private Enterprises enterprises;
-    private SecurityLevel securityLevel;
-    private InputParameters inputParam;
+    private User userModel;
+    private Enterprises enterprisesModel;
+    private SecurityLevel securityLevelModel;
+    private InputParameters inputParamModel;
     
     private static MainController instance = null;
-    SecurityLevelController secLevel = new SecurityLevelController();
+    SecurityLevelController securityLevelControl = new SecurityLevelController();
     //How it do better
     private JTabbedPane mainPanels = new JTabbedPane();
     private JPanel securityLevelPanel = null;
@@ -58,48 +56,75 @@ public class MainController {
      }
     
     public MainController() {
-        user = new User();  
-        enterprises = new Enterprises();
-        securityLevel = new SecurityLevel();
-        inputParam = new InputParameters();   
+        userModel = new User();  
+        enterprisesModel = new Enterprises();
+        securityLevelModel = new SecurityLevel();
+        inputParamModel = new InputParameters();   
     }
-
+    public void selectEnterpriseName(String name) {
+        securityLevelModel.setSelectEnterpriseName(name);
+    }
+    public String getEnterpriseName() {
+        return securityLevelModel.getSelectEnterpriseName();
+    }
+    public void selectEnterpriseId(int id) {
+        securityLevelModel.setSelectEnterpriseId(id);
+    }
+    public int getEnterpriseId() {
+        return securityLevelModel.getSelectEnterpriseId();
+    }
     public void createThreatList() {
-        secLevel.createThreatList();
+        securityLevelControl.createThreatList();
     }
-    public void setMainTabPanels(JTabbedPane tabPane) {
-        
+    public void createPentestList() {
+        securityLevelControl.createPentestList();
+    }
+    public void determineSecurityLevel() {
+        //securityLevelControl.createResultList();
+        securityLevelControl.setResultStatistic();
+    }
+    public Vector showResults() {
+        return securityLevelControl.getResultStatistic();
+    }
+    public int getThreatCount() {
+        return securityLevelControl.getThreatCount();
+    }
+    public int getLevelCount() {
+        return securityLevelControl.getLevelCount();
+    }
+    public int getResultLevel() {
+        return securityLevelControl.getFindLevel();
+    }
+    public void addCommonPercent(Integer num, Float percent) {
+       securityLevelControl.setCommonPercent(num, percent);
+    }
+    public void addThreatPercent(Integer num, Float percent) {
+       securityLevelControl.setThreatPercent(num, percent);
+    }
+    public void addPentestResult(Integer num, Boolean isImplement) {
+       securityLevelControl.setPentestResult(num, isImplement);
+    }
+    public void setSelectedLevel(int num) {
+       securityLevelControl.setSelectedLevel(num);
+    }
+    public Vector loadThreatPercent(JTable table) {
+       return securityLevelControl.loadThreatPercent(table);
     }
     public void setSecurityLevelPanel(JPanel panel) {
-        securityLevelPanel = panel;
+       securityLevelPanel = panel;
     }
     public JTabbedPane getTabPanels() {
-        return mainPanels;
+       return mainPanels;
     }
     public JPanel getSecurityLevelPanel() {
-        return securityLevelPanel;
+       return securityLevelPanel;
     }
-   public void addCommonPercent(Integer num, Float percent) {
-       secLevel.setCommonPercent(num, percent);
-   }
-   public void addThreatPercent(Integer num, Float percent) {
-       secLevel.setThreatPercent(num, percent);
-   }
-   public void setSelectedLevel(int num) {
-       secLevel.setSelectedLevel(num);
-   }
-   public Vector loadThreatPercent() {
-       return secLevel.loadThreatPercent();
-   }
-//   public void addSecurityLevelId(int num) {
-//       secLevel.setGroupId(num);
-//   }
     public int getComboBoxId(ActionEvent evt, JComboBox comboBox) {
          if (evt.getSource().equals(comboBox)) {
              comboBox = (JComboBox) evt.getSource();
              Item item = (Item) comboBox.getSelectedItem();
              if(item!=null){
-                  System.out.println("ComboBox id:"+item.getId());
+                 // System.out.println("ComboBox id:"+item.getId());
                   return item.getId();
                 }
         }
@@ -110,7 +135,7 @@ public class MainController {
              comboBox = (JComboBox) evt.getSource();
              Item item = (Item) comboBox.getSelectedItem();
              if(item!=null){
-                  System.out.println("ComboBox value:"+item.getDescription());
+                 // System.out.println("ComboBox value:"+item.getDescription());
                   return item.getDescription();
                 }
         }
@@ -138,11 +163,11 @@ public class MainController {
        securityLevelPanel.setVisible(true);
    }
     public boolean CheckUser(JTextField textLogin, JTextField textPass) {
-        user.setLogin(textLogin.getText());
-        user.setPass(textPass.getText());
-        user.findUser();
-        if (user.getUserId() != 0) {
-            System.out.println("Hello, " + user.getUserName());
+        userModel.setLogin(textLogin.getText());
+        userModel.setPass(textPass.getText());
+        userModel.findUser();
+        if (userModel.getUserId() != 0) {
+            System.out.println("Hello, " + userModel.getUserName());
             return true;
         }
         else 
@@ -159,39 +184,41 @@ public class MainController {
         Vector res = new Vector();
         switch (_table) {
             case DATA:
-                res = inputParam.getInputParameters();
+                res = inputParamModel.getInputParameters();
                 break;
             case COMPETENCE:
-                res = user.getExperts();
+                res = userModel.getExperts();
                 break;
             case AUDITCLIENT:
-                res = enterprises.getAudits();
+                res = enterprisesModel.getAudits();
                 break;
             case SECURITYLEVEL:
-                res = securityLevel.getLevelRecords();
-                secLevel.setGroupId(getColumn(res));
+                res = securityLevelModel.getLevelRecords();
+                securityLevelControl.setGroupId(getColumn(res));
                 break;
             case THREATS:
             case PENTEST:
-                res = securityLevel.getThreatRecords();
-                secLevel.setThreatId(getColumn(res));
+                res = securityLevelModel.getThreatRecords();
+                securityLevelControl.setThreatId(getColumn(res));
                 break;
             case ENTERPRISES:
-                res = enterprises.getEnterprises();
+                res = enterprisesModel.getEnterprises();
                 break;
             case RESEARCH:
-                res = enterprises.getResearches();
+                res = enterprisesModel.getResearches();
                 break;
             default:
                 break; 
         }
          return res;
     }
-    public void determineSecurityLevel() {
-        
+    public Vector getTableHeader(Vector data) {
+        Vector header = new Vector();
+        for (int i = 0; i < data.size(); i++) {
+            header.add(((Vector)data.get(i)).get(1));
+        }
+        return header;
     }
-    
-    
 //    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
 //       switch (_table) {
 //            case DLPSYSTEM:
@@ -207,18 +234,15 @@ public class MainController {
 //        }
 //    }
 //    
-//    public void createRecord(Vector _data, TextQuery _table) {
-//         switch (_table) {
-//            case DLPSYSTEM:
-//                dlpSystems.createDLPSystems(_data);
-//                break;
-//            case AUDITCLIENT:
-//                enterprises.createEnterprise(_data);
-//                break;
-//            default:
-//                break; 
-//        }
-//    }
+    public void createRecord(Vector _data, TextQuery _table) {
+         switch (_table) {
+            case AUDITCLIENT:
+                enterprisesModel.createAudit(_data);
+                break;
+            default:
+                break; 
+        }
+    }
 //    
 //    public void deleteRecord(int _num, TextQuery _table) {
 //        switch (_table) {

@@ -8,11 +8,24 @@ import java.util.Vector;
 public class SecurityLevel extends ModelAction {
     Connection connection = null;
     Vector records = new Vector(); 
+    private String selectEnterpriseName = null;
+    private int selectEnterpriseId;
     
     public SecurityLevel() {
         connection = ConnectionDB.getInstance().getConnection();
     }
-    
+    public void setSelectEnterpriseName(String name) {
+        selectEnterpriseName = name;
+    }
+    public String getSelectEnterpriseName() {
+        return selectEnterpriseName;
+    }
+    public void setSelectEnterpriseId(int id) {
+        selectEnterpriseId = id;
+    }
+    public int getSelectEnterpriseId() {
+        return selectEnterpriseId;
+    }
     private void findSecurityLevel() {
         String findSQL = "SELECT * from security_level where level_id < 4";
         records = findRecords(findSQL);

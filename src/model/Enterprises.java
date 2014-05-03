@@ -45,7 +45,11 @@ public class Enterprises extends ModelAction {
 //         String userQuery = "Delete from dlp_systems where system_id = ?";
 //         deleteRecord(_num, userQuery);
     }
-    
+    public void createAudit(Vector _data) {
+        String userQuery = "INSERT INTO audits (enterprise_id, level_id) VALUES "
+                            +"(?,?)";
+        createForeignRecord(_data, userQuery);
+    }
     public Vector getAudits() {
         return findAudits();
     }

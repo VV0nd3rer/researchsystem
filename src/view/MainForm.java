@@ -67,7 +67,7 @@ public class MainForm  {
             @Override
             public void actionPerformed(ActionEvent e) {
                     control.hidePanels();
-                    setFrameSize(1000, 700);
+                    setFrameSize(1200, 800);
                     createSucuretyLevelPanel();
                     guiFrame.add(control.getSecurityLevelPanel());
                     guiFrame.revalidate();
@@ -137,7 +137,7 @@ public class MainForm  {
     private void createSucuretyLevelPanel() {
         //Контроллер - занести выбранное предприятие и начать определение ур-ня безопасности
         //ИС предприятия используя байесовский метод
-        control.setSecurityLevelPanel(new SecurityLevePanel());
+        control.setSecurityLevelPanel(new SecurityLevePanel(control.getEnterpriseName()));
     }
     
 }
