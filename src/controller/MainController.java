@@ -33,6 +33,7 @@ public class MainController {
     
     private static MainController instance = null;
     SecurityLevelController securityLevelControl = new SecurityLevelController();
+    ResearchController researchControl = new ResearchController();
     //How it do better
     private JTabbedPane mainPanels = new JTabbedPane();
     private JPanel securityLevelPanel = null;
@@ -218,6 +219,10 @@ public class MainController {
             header.add(((Vector)data.get(i)).get(1));
         }
         return header;
+    }
+    public void findCompetenceCriterias() {
+        researchControl.findCompetenceCriterias();
+        researchControl.printCompetentCriteria();
     }
 //    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
 //       switch (_table) {

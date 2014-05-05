@@ -31,7 +31,24 @@ public class ResearchPanel extends JPanel {
     private void initComponents() {
 
         ResearchScrollPane = new javax.swing.JScrollPane();
-        ResearchTable = new javax.swing.JTable();
+        ResearchTable = new JTable() {
+            @Override
+            public Class getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                    return String.class;
+                    case 1:
+                    return String.class;
+                    case 2:
+                    return String.class;
+                    case 3:
+                    return Boolean.class;
+                    default:
+                    return getValueAt(0, column).getClass();
+                }
+            }
+        };
+        OkButton = new javax.swing.JButton();
 
         ResearchTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -46,13 +63,22 @@ public class ResearchPanel extends JPanel {
         ));
         ResearchScrollPane.setViewportView(ResearchTable);
 
+        OkButton.setText("Ok");
+        OkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OkButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(57, 57, 57)
-                .addComponent(ResearchScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(OkButton)
+                    .addComponent(ResearchScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(208, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -60,12 +86,19 @@ public class ResearchPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(ResearchScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(OkButton)
+                .addContainerGap(186, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void OkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OkButtonActionPerformed
+        control.findCompetenceCriterias();
+    }//GEN-LAST:event_OkButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton OkButton;
     private javax.swing.JScrollPane ResearchScrollPane;
     private javax.swing.JTable ResearchTable;
     // End of variables declaration//GEN-END:variables

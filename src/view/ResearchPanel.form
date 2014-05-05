@@ -18,7 +18,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-              <Component id="ResearchScrollPane" min="-2" pref="473" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="OkButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="ResearchScrollPane" min="-2" pref="473" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="208" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -28,7 +31,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               <Component id="ResearchScrollPane" min="-2" pref="199" max="-2" attributes="0"/>
-              <EmptySpace pref="220" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="OkButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="186" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -52,8 +57,19 @@
               </Table>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {&#xd;&#xa;            @Override&#xd;&#xa;            public Class getColumnClass(int column) {&#xd;&#xa;                switch (column) {&#xd;&#xa;                    case 0:&#xd;&#xa;                        return String.class;&#xd;&#xa;                    case 1:&#xd;&#xa;                        return String.class;&#xd;&#xa;                    case 2:&#xd;&#xa;                        return String.class;&#xd;&#xa;                    case 3:&#xd;&#xa;                        return Boolean.class;&#xd;&#xa;                    default:&#xd;&#xa;                        return getValueAt(0, column).getClass();&#xd;&#xa;                }&#xd;&#xa;            }&#xd;&#xa;        };"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="OkButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ok"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OkButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
