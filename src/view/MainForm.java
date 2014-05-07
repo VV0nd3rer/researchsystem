@@ -28,6 +28,7 @@ public class MainForm  {
   
     private JButton loginButton = new  JButton("Ok");
     private JButton auditButton = new JButton("->");
+    private JButton optimizeButton = new JButton("Optimize");
            
     public MainForm() {
         control = MainController.getInstance();
@@ -74,6 +75,16 @@ public class MainForm  {
             }
         });
         
+        optimizeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                control.hidePanels();
+                //setFrameSize(1200, 800);
+                createOptimizePanel();
+                guiFrame.add(control.getOptimizePanel());
+                guiFrame.revalidate();
+            }
+        });
  }
     
     private void createPanels() {
@@ -127,6 +138,8 @@ public class MainForm  {
     }
     private void createResearchPanel() {
         researchPanel = new ResearchPanel();
+        optimizeButton.setBounds(220, 380, 100, 30);
+        researchPanel.add(optimizeButton);
     }
     private void createDataPanel() {
         dataPanel = new DataPanel();
@@ -139,6 +152,8 @@ public class MainForm  {
         //ИС предприятия используя байесовский метод
         control.setSecurityLevelPanel(new SecurityLevePanel(control.getEnterpriseName()));
     }
-    
+    private void createOptimizePanel() {
+        control.setOptimizePanel(new OptimizePanel());
+    }
 }
 

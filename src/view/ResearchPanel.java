@@ -3,15 +3,50 @@ package view;
 import controller.MainController;
 import java.util.Vector;
 import javax.swing.*;
-public class ResearchPanel extends JPanel {
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+public class ResearchPanel extends JPanel implements ITableView {
     private MainController control = null;
-    private TablesView tableView = null;
+    public DefaultTableModel defaultTableModel = null;
     public ResearchPanel() {
         control = MainController.getInstance();
         initComponents();
-        tableView = new TablesView(ResearchTable);
         showTable();
     }
+     //------------------ ITable interfaces methods ---------------------------//
+    public void addChangeListener (final MainController.TextQuery type) {
+        determineTable(type).getModel().addTableModelListener(new TableModelListener() {
+            @Override
+             public void tableChanged(TableModelEvent e) {
+                changeRow(e, type);
+             }
+        });
+    }
+    public void addSelectListener(final MainController.TextQuery type) {
+        determineTable(type).getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+               selectRow(e, type);
+            }
+        });
+    }
+    public void changeRow(TableModelEvent e, MainController.TextQuery type) {
+        System.out.println("changeRow method");
+    }
+    public void selectRow(ListSelectionEvent e, MainController.TextQuery type) {
+        System.out.println("selectRow method");
+    }
+    public void fillTable(JTable table, Vector data, Vector columns) {
+      table.setModel(new DefaultTableModel(data, columns));
+      defaultTableModel = (DefaultTableModel)table.getModel();
+    }
+    public JTable determineTable(MainController.TextQuery type) {
+        return ResearchTable;
+    }
+    //------------------------------------------------------------------//
     private Vector columnsName() {
         Vector columnNames = new Vector();     
          columnNames.addElement("Num");
@@ -21,9 +56,9 @@ public class ResearchPanel extends JPanel {
          return columnNames;
     }
      private void showTable() {
-         tableView.data = control.findRecord(control.textQuery.RESEARCH);
-         tableView.columns = columnsName();
-         tableView.fillTable();
+         Vector data = control.findRecord(control.textQuery.RESEARCH);
+         Vector columns = columnsName();
+         fillTable(ResearchTable, data, columns);
     }
 
     @SuppressWarnings("unchecked")
@@ -93,7 +128,8 @@ public class ResearchPanel extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void OkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OkButtonActionPerformed
-        control.findCompetenceCriterias();
+        //control.setCriteriasEstimates();
+        
     }//GEN-LAST:event_OkButtonActionPerformed
 
 

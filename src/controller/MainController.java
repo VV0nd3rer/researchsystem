@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Vector;
 import model.*;
+import view.OptimizePanel;
   
 //For work with comboBox
 //http://stackoverflow.com/questions/
@@ -37,6 +38,7 @@ public class MainController {
     //How it do better
     private JTabbedPane mainPanels = new JTabbedPane();
     private JPanel securityLevelPanel = null;
+    private JPanel optimizePanel = null;
     
     public enum TextQuery {
         //audit
@@ -44,7 +46,8 @@ public class MainController {
         // Bayesian approach
         SECURITYLEVEL, THREATS, PENTEST,
         ENTERPRISES,
-        RESEARCH, DATA, COMPETENCE
+        RESEARCH, DATA, COMPETENCE,
+        CRITERIAESTIMATE, DLPESTIMATE
     }
     
     public TextQuery textQuery;
@@ -114,11 +117,17 @@ public class MainController {
     public void setSecurityLevelPanel(JPanel panel) {
        securityLevelPanel = panel;
     }
+    public void setOptimizePanel(JPanel panel) {
+        optimizePanel = panel;
+    }
     public JTabbedPane getTabPanels() {
        return mainPanels;
     }
     public JPanel getSecurityLevelPanel() {
        return securityLevelPanel;
+    }
+    public JPanel getOptimizePanel() {
+        return optimizePanel;
     }
     public int getComboBoxId(ActionEvent evt, JComboBox comboBox) {
          if (evt.getSource().equals(comboBox)) {
@@ -220,9 +229,8 @@ public class MainController {
         }
         return header;
     }
-    public void findCompetenceCriterias() {
-        researchControl.findCompetenceCriterias();
-        researchControl.printCompetentCriteria();
+    public Vector setCriteriasEstimates() {
+      return researchControl.setCriteriasEstimates();
     }
 //    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
 //       switch (_table) {
