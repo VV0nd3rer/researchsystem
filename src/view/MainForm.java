@@ -79,7 +79,7 @@ public class MainForm  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 control.hidePanels();
-                //setFrameSize(1200, 800);
+                setFrameSize(1200, 1000);
                 createOptimizePanel();
                 guiFrame.add(control.getOptimizePanel());
                 guiFrame.revalidate();

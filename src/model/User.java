@@ -39,7 +39,7 @@ public class User extends ModelAction {
   }
     private Vector findExperts() {
         sqlQuery = "SELECT * FROM experts";
-        records = findRecords(sqlQuery);
+        records = getRecords(findRecords(sqlQuery));
         return records;
     }
     public Vector getExperts() {

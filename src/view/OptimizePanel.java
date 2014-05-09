@@ -50,10 +50,10 @@ public class OptimizePanel extends JPanel implements ITableView {
          JTable table = null;
         switch(type) {
             case CRITERIAESTIMATE:
-                    table = CriteriasEstimate;
+                    table = CriteriasEstimateTable;
                     break;
             case DLPESTIMATE:
-                    table = DlpEstimates;
+                    table = DlpTable;
                     break;
             default:
                     break;  
@@ -71,7 +71,9 @@ public class OptimizePanel extends JPanel implements ITableView {
      private void showTable() {
          Vector data = control.setCriteriasEstimates();
          Vector columns = columnsName();
-         fillTable(CriteriasEstimate, data, columns);
+         fillTable(CriteriasEstimateTable, data, columns);
+         
+         fillTable(DlpTable, control.setDlpEstimates(), columns);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,13 +85,15 @@ public class OptimizePanel extends JPanel implements ITableView {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        CriteriasEstimate = new javax.swing.JTable();
+        CriteriasEstimateTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        DlpEstimates = new javax.swing.JTable();
+        DlpTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        DlpEstimatesTable = new javax.swing.JTable();
 
-        CriteriasEstimate.setModel(new javax.swing.table.DefaultTableModel(
+        CriteriasEstimateTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -100,12 +104,12 @@ public class OptimizePanel extends JPanel implements ITableView {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(CriteriasEstimate);
+        jScrollPane1.setViewportView(CriteriasEstimateTable);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Competence estimates of criterias");
 
-        DlpEstimates.setModel(new javax.swing.table.DefaultTableModel(
+        DlpTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -116,10 +120,23 @@ public class OptimizePanel extends JPanel implements ITableView {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(DlpEstimates);
+        jScrollPane2.setViewportView(DlpTable);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Competence estimates if DLP-systems");
+
+        DlpEstimatesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(DlpEstimatesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -127,36 +144,40 @@ public class OptimizePanel extends JPanel implements ITableView {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1)))
-                .addContainerGap(446, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(468, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(4, 4, 4)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable CriteriasEstimate;
-    private javax.swing.JTable DlpEstimates;
+    private javax.swing.JTable CriteriasEstimateTable;
+    private javax.swing.JTable DlpEstimatesTable;
+    private javax.swing.JTable DlpTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }

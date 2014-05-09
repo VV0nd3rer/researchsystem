@@ -28,7 +28,7 @@ public class SecurityLevel extends ModelAction {
     }
     private void findSecurityLevel() {
         String findSQL = "SELECT * from security_level where level_id < 4";
-        records = findRecords(findSQL);
+        records = getRecords(findRecords(findSQL));
 //        try {
 //            ResultSet rs = findRecords(findSQL);
 //            while (rs.next()) {
@@ -43,18 +43,28 @@ public class SecurityLevel extends ModelAction {
     
     private void findThreats() {
         String findSQL = "SELECT * FROM threats";
-        records = findRecords(findSQL);
+        records = getRecords(findRecords(findSQL));
     }
     
-    private void findSelectedDLP(int _id) {
-        String findSQL = "SELECT title from dlp_systems where system_id = ?";
-        records = findParamRecords(findSQL, _id);
-    }
-    
-    public Vector getSelectedDLP(int _id) {
-        findSelectedDLP(_id);
-        return records;
-    }
+//    private void findSelectedDLP(int _id) {
+//        String findSQL = "SELECT title from dlp_systems where system_id = ?";
+//        ResultSet rs = findParamRecords(findSQL, _id);
+//        fillRecords(rs);
+//    }
+//    private void fillRecords(ResultSet rs) {
+//        try {
+//            while (rs.next()) {
+//                records.add(rs.getObject(1));
+//            }
+//        }
+//        catch(SQLException sql) {
+//            System.out.println("Error in resultSet fill records");
+//        }
+//    }
+//    public Vector getSelectedDLP(int _id) {
+//        findSelectedDLP(_id);
+//        return records;
+//    }
     
     public Vector getLevelRecords() {
         findSecurityLevel();

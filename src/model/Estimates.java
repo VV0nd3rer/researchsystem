@@ -1,9 +1,18 @@
 package model;
 
-public class Estimates {  
-    private int id;
+public class Estimates { 
+    private int riskId;
+    private int criteriaId;
+    private int dlpId;
     private float fuzzyEstimate;
     private String linguisticEstimate;
+    private float mean;
+    public void setMean(float mean) {
+        this.mean = mean;
+    }
+    public float getMean() {
+        return mean;
+    }
     public void setFuzzyEstimate(float estimate) {
         fuzzyEstimate = estimate;
     }
@@ -16,10 +25,16 @@ public class Estimates {
     public String getLinguisticEstimate() {
         return linguisticEstimate;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setCriteriaId(int id) {
+        criteriaId = id;
     }
-    public int getId() {
-        return id;
+    public int getCriteriaId() {
+        return criteriaId;
     }  
+    public void setDlpId(int id) {
+        dlpId = id;
+    }
+    public int getDlpId() {
+        return dlpId;
+    }
 }

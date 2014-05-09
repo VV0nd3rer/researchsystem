@@ -232,6 +232,9 @@ public class MainController {
     public Vector setCriteriasEstimates() {
       return researchControl.setCriteriasEstimates();
     }
+    public Vector setDlpEstimates() {
+        return researchControl.setDlpEstimates();
+    }
 //    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
 //       switch (_table) {
 //            case DLPSYSTEM:

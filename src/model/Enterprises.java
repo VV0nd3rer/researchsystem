@@ -9,7 +9,7 @@ public class Enterprises extends ModelAction {
       
     private Vector findEnterprises() {
         sqlQuery = "SELECT * FROM enterprises";
-        records = findRecords(sqlQuery);
+        records = getRecords(findRecords(sqlQuery));
         return records;
     }
     
@@ -17,14 +17,14 @@ public class Enterprises extends ModelAction {
         sqlQuery = "SELECT audit_id, enterprises.name, security_level.level FROM research.audits, enterprises, security_level " +
                         "where audits.enterprise_id = enterprises.enterprise_id and " +
                         "audits.level_id = security_level.level_id";
-        records = findRecords(sqlQuery);
+        records = getRecords(findRecords(sqlQuery));
         return records;
     }
     private Vector findResearches() {
         sqlQuery = "SELECT research_id, name, title, is_done  FROM researches, enterprises, dlp_systems " +
                         "where researches.enterprise_id = enterprises.enterprise_id and " +
                         "researches.system_id = dlp_systems.system_id";
-        records = findRecords(sqlQuery);
+        records = getRecords(findRecords(sqlQuery));
         return records;
     }
     public void updateEnterprise(Vector _num, Vector _data) {
