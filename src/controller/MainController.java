@@ -31,6 +31,7 @@ public class MainController {
     private Enterprises enterprisesModel;
     private SecurityLevel securityLevelModel;
     private InputParameters inputParamModel;
+    private DlpSystems dlpModel;
     
     private static MainController instance = null;
     SecurityLevelController securityLevelControl = new SecurityLevelController();
@@ -45,7 +46,7 @@ public class MainController {
         AUDITCLIENT, 
         // Bayesian approach
         SECURITYLEVEL, THREATS, PENTEST,
-        ENTERPRISES,
+        ENTERPRISES, DLPSYSTEMS,
         RESEARCH, DATA, COMPETENCE,
         CRITERIAESTIMATE, DLPESTIMATE
     }
@@ -63,7 +64,8 @@ public class MainController {
         userModel = new User();  
         enterprisesModel = new Enterprises();
         securityLevelModel = new SecurityLevel();
-        inputParamModel = new InputParameters();   
+        inputParamModel = new InputParameters();
+        dlpModel = new DlpSystems();
     }
     public void selectEnterpriseName(String name) {
         securityLevelModel.setSelectEnterpriseName(name);
@@ -172,6 +174,9 @@ public class MainController {
    public void showSecurityLevelPanel() {
        securityLevelPanel.setVisible(true);
    }
+   public void hideOptimizePanel() {
+       optimizePanel.setVisible(false);
+   }
     public boolean CheckUser(JTextField textLogin, JTextField textPass) {
         userModel.setLogin(textLogin.getText());
         userModel.setPass(textPass.getText());
@@ -222,6 +227,9 @@ public class MainController {
         }
          return res;
     }
+    public Vector getResearchDlp(int researchId) {
+        return dlpModel.getResearchDlp(researchId);
+    }
     public Vector getTableHeader(Vector data) {
         Vector header = new Vector();
         for (int i = 0; i < data.size(); i++) {
@@ -229,11 +237,14 @@ public class MainController {
         }
         return header;
     }
-    public Vector setCriteriasEstimates() {
-      return researchControl.setCriteriasEstimates();
+    public Vector determineCriteriasEstimates() {
+      return researchControl.determineCriteriasEstimates();
     }
-    public Vector setDlpEstimates() {
-        return researchControl.setDlpEstimates();
+    public void determineDlpEstimates() {
+         researchControl.determineDlpEstimates();
+    }
+    public Vector getDlpEstimates(int dlpId) {
+        return researchControl.getDlpEstimates(dlpId);
     }
 //    public void updateRecord(Vector _num, Vector _data, TextQuery _table) {
 //       switch (_table) {

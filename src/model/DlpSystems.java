@@ -82,4 +82,24 @@ public class DlpSystems extends ModelAction {
     public Vector getCompetenceEstimates() {
         return competenceEstimates;
     }
+    public Vector getResearchDlp(int researchId) {
+        Vector res = new Vector();
+        String sqlQuery = "Select * from research_dlp, dlp_systems where research_dlp.research_id = ? and research_dlp.system_id = dlp_systems.system_id";
+        ResultSet rs = findRecordsById(sqlQuery, researchId);
+        try {
+            
+            while(rs.next()) {
+                Vector row = new Vector();
+                row.add(rs.getInt("system_id"));
+                row.add(rs.getString("title"));
+                row.add(rs.getString("information"));
+                res.add(row);
+            }
+            
+        }
+        catch(SQLException sql) {
+            
+        }
+        return res;
+    }
 }

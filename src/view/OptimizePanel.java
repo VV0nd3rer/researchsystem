@@ -17,6 +17,7 @@ public class OptimizePanel extends JPanel implements ITableView {
         initComponents();
         control = MainController.getInstance();
         showTable();
+        addSelectListener(MainController.TextQuery.DLPSYSTEMS);
     }
 
      //------------------ ITable interfaces methods ---------------------------//
@@ -40,6 +41,16 @@ public class OptimizePanel extends JPanel implements ITableView {
         System.out.println("changeRow method");
     }
     public void selectRow(ListSelectionEvent e, MainController.TextQuery type) {
+        if (e.getValueIsAdjusting())
+             return;
+         JTable table = determineTable(type);
+         int row = table.getSelectedRow();
+         int dlpId = (int)table.getValueAt(row, 0);
+         System.out.println("dlpId: " + dlpId);
+         //control.setSelectedLevel((int)table.getValueAt(row, 0));
+         //Edit for many diffrent tables
+         if (type.equals(control.textQuery.DLPSYSTEMS))
+             updateTable(DlpEstimatesTable, DlpEstimatesTable.getColumnCount()-1, control.getDlpEstimates(dlpId));
         System.out.println("selectRow method");
     }
     public void fillTable(JTable table, Vector data, Vector columns) {
@@ -53,6 +64,9 @@ public class OptimizePanel extends JPanel implements ITableView {
                     table = CriteriasEstimateTable;
                     break;
             case DLPESTIMATE:
+                    table = DlpEstimatesTable;
+                    break;
+            case DLPSYSTEMS:
                     table = DlpTable;
                     break;
             default:
@@ -61,19 +75,41 @@ public class OptimizePanel extends JPanel implements ITableView {
         return table;
     }
     //------------------------------------------------------------------//
-    private Vector columnsName() {
-        Vector columnNames = new Vector();     
-         columnNames.addElement("Num");
-         columnNames.addElement("Linguistic estimate");
-         columnNames.addElement("Fuzzy estimate");
+     public void updateTable(JTable table, int column, Vector data) {
+        //System.out.println(data);
+        fillTable(table, data, columnsName(control.textQuery.DLPESTIMATE));
+    }
+    private Vector columnsName(MainController.TextQuery _table) {
+        Vector columnNames = new Vector();
+        switch (_table) 
+        {
+            case CRITERIAESTIMATE:
+                 columnNames.addElement("Num");
+                 columnNames.addElement("Linguistic estimate");
+                 columnNames.addElement("Fuzzy estimate");
+                 break;
+            case DLPSYSTEMS:
+                 columnNames.addElement("Num");
+                 columnNames.addElement("Title");
+                 columnNames.addElement("Information");
+                 break;
+            case DLPESTIMATE:
+                columnNames.addElement("System num");
+                columnNames.addElement("Criteria num");
+                columnNames.addElement("Linguistic estimate");
+                columnNames.addElement("Fuzzy estimate");
+                break;
+            default:
+                break;
+        }
          return columnNames;
     }
-     private void showTable() {
-         Vector data = control.setCriteriasEstimates();
-         Vector columns = columnsName();
-         fillTable(CriteriasEstimateTable, data, columns);
+     private void showTable() { 
+         fillTable(CriteriasEstimateTable, control.determineCriteriasEstimates(), columnsName(control.textQuery.CRITERIAESTIMATE));
+         fillTable(DlpTable, control.getResearchDlp(1), columnsName(MainController.TextQuery.DLPSYSTEMS));
+         control.determineDlpEstimates();
+         fillTable(DlpEstimatesTable, control.getDlpEstimates(1), columnsName(control.textQuery.DLPESTIMATE));
          
-         fillTable(DlpTable, control.setDlpEstimates(), columns);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -92,6 +128,8 @@ public class OptimizePanel extends JPanel implements ITableView {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         DlpEstimatesTable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         CriteriasEstimateTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -138,42 +176,69 @@ public class OptimizePanel extends JPanel implements ITableView {
         ));
         jScrollPane3.setViewportView(DlpEstimatesTable);
 
+        jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Optimize");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41)
+                        .addComponent(jButton2)
+                        .addGap(36, 36, 36)
+                        .addComponent(jButton1))
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(468, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(259, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        control.hideOptimizePanel();
+        control.showPanels();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable CriteriasEstimateTable;
     private javax.swing.JTable DlpEstimatesTable;
     private javax.swing.JTable DlpTable;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
