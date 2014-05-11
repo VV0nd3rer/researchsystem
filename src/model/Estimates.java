@@ -37,4 +37,8 @@ public class Estimates {
     public int getDlpId() {
         return dlpId;
     }
+    public void print() {
+        System.out.println("dlp id: " + dlpId);
+        System.out.println("fuzzy estimate: " + fuzzyEstimate);
+    }
 }

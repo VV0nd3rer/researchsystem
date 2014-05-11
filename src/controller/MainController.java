@@ -67,6 +67,10 @@ public class MainController {
         inputParamModel = new InputParameters();
         dlpModel = new DlpSystems();
     }
+    public void createResearch() {
+        researchControl.createResearch();
+        researchControl.printResults();
+    }
     public void selectEnterpriseName(String name) {
         securityLevelModel.setSelectEnterpriseName(name);
     }

@@ -11,20 +11,7 @@ import java.util.List;
 
 public class Criterias extends ModelAction {
     private List<Estimates> competenceEstimate = new ArrayList();
-    //private Map<Integer, Float> competenceEstimateMap = new HashMap<Integer, Float>();
-    
-//    private float competentEstimate;
-//    private float consistency;
-    
-    
-//    public void setCriteriaId(int id) {
-//        criteriaId = id;
-//    }
-    
-//    public void setCriteriaTitle(String title) {
-//        criteriaTitle = title;
-//    }
-    
+   
     private void fillCompetenceCriterias(ResultSet rs) {
         try {
             while (rs.next()) {
@@ -66,12 +53,6 @@ public class Criterias extends ModelAction {
         String sqlQuery = "SELECT * FROM criterias_estimate";
         return findEstimateList(findRecords(sqlQuery));     
     }
-//    public void printCompetenceCriterias() {
-//        for(Map.Entry<Integer, Float> entry : competenceEstimateMap.entrySet()) {
-//            System.out.println("competenceCriteriasMap: " + entry.getKey());
-//            System.out.println("competenceCriteriasValue: " + entry.getValue());
-//        }
-//    }
     public List<Float> getCompetenceEstimatesValue() {
         List<Float> data = new ArrayList();
         for(Estimates estimate :competenceEstimate) 
@@ -81,12 +62,18 @@ public class Criterias extends ModelAction {
     public List<Estimates> getCompetenceEstimates() {
         return competenceEstimate;
     }
-//    private void fillCompetenceCriteriasMap() {
-//        for (int i = 0; i < competenceCriteriasVec.size(); i++) {
-//            CompetenceCriterias criteria = new CompetenceCriterias();
-//            criteria = (CompetenceCriterias)competenceCriteriasVec.get(i);
-//            competenceCriteriasMap.put(criteria.getCriteriaId(), criteria.getMean());
-//        }
-//    }
-   
+    public float getEstimatesFuzzyValue(int criteriaId) {
+        for (Estimates estimate :competenceEstimate) {
+            if(estimate.getCriteriaId() == criteriaId)
+               return estimate.getFuzzyEstimate();
+        }
+        return 0;
+    }
+    public void setEstimatesFuzzyValue(int criteriaId, float value) {
+        for (Estimates estimate :competenceEstimate) {
+            if(estimate.getCriteriaId() == criteriaId) {
+                estimate.setFuzzyEstimate(value);
+            }
+        }
+    }
 }

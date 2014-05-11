@@ -111,6 +111,9 @@ public class OptimizePanel extends JPanel implements ITableView {
          fillTable(DlpEstimatesTable, control.getDlpEstimates(1), columnsName(control.textQuery.DLPESTIMATE));
          
     }
+     
+     
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -184,6 +187,11 @@ public class OptimizePanel extends JPanel implements ITableView {
         });
 
         jButton2.setText("Optimize");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -231,6 +239,10 @@ public class OptimizePanel extends JPanel implements ITableView {
         control.hideOptimizePanel();
         control.showPanels();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        control.createResearch();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

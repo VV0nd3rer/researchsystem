@@ -79,9 +79,29 @@ public class DlpSystems extends ModelAction {
         }
         return res;
     }
+    public List<Estimates> getCompetenceEstimate(int dlpId) {
+        //List<Estimates> res = new ArrayList();
+        for(int i = 0; i < competenceEstimates.size(); i++) {
+            List<Estimates> element = (List<Estimates>) competenceEstimates.get(i);
+            for(Estimates estimates :element)
+                if(estimates.getDlpId() == dlpId)
+                    return element;
+        }
+        return null;
+    }
+    public void setEstimatesFuzzyValue(int dlpId, int criteriaId, float value) {
+        for(int i = 0; i < competenceEstimates.size(); i++) {
+            List<Estimates> element = (List<Estimates>) competenceEstimates.get(i);
+            for(Estimates estimates :element) {
+                if (estimates.getDlpId() == dlpId && estimates.getCriteriaId() == criteriaId) 
+                    estimates.setFuzzyEstimate(value);
+            }
+        }
+    }
     public Vector getCompetenceEstimates() {
         return competenceEstimates;
     }
+    
     public Vector getResearchDlp(int researchId) {
         Vector res = new Vector();
         String sqlQuery = "Select * from research_dlp, dlp_systems where research_dlp.research_id = ? and research_dlp.system_id = dlp_systems.system_id";
@@ -101,5 +121,19 @@ public class DlpSystems extends ModelAction {
             
         }
         return res;
+    }
+    public List<Integer> getResearchDlpId(int researchId) {
+        List<Integer> dlpId = new ArrayList();
+        String sqlQuery = "Select * from research_dlp, dlp_systems where research_dlp.research_id = ? and research_dlp.system_id = dlp_systems.system_id";
+        ResultSet rs = findRecordsById(sqlQuery, researchId);
+        try { 
+            while(rs.next()) {
+                dlpId.add(rs.getInt("system_id"));
+            }            
+        }
+        catch(SQLException sql) {
+            
+        }
+        return dlpId;
     }
 }
