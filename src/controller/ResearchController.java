@@ -6,6 +6,7 @@ import model.Estimates;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
+import javax.swing.JPanel;
 import model.DlpSystems;
 
 class FuzzyElement {
@@ -27,32 +28,45 @@ class FuzzyElement {
 
 class FuzzyNumber {
     private final static int ELEMENTS = 5;
+    private int dlpId;
+    private String title;
     private FuzzyElement[] numberSet = new FuzzyElement[ELEMENTS];
     public void setNumber(float number) {
         float countX = -2.0f;
         float countY = 0;
         for (int i = 0; i < ELEMENTS; i++) {
+            numberSet[i] = new FuzzyElement();
             numberSet[i].setX(number + countX);
             numberSet[i].setY(countY);
             if(i > 1) 
-                countY--;
+                countY -= 0.5;
             else 
-                countY++;
+                countY += 0.5;
             countX++;
         }
     }
     public FuzzyElement[] getNumber() {
         return numberSet;
     }
+    public void setDlpId(int dlpId) {
+        this.dlpId = dlpId;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getTitle() {
+        return title;
+    }
 }
 
 public class ResearchController {
     private Criterias criteria = new Criterias();
     private DlpSystems dlpSystem = new DlpSystems();
+    private DrawGraph drawing = new DrawGraph();
     //private Vector criteriasEstimates = new Vector();
     private Vector dlpEstimatesByCriteria = new Vector();
-    
     private List<Estimates> researchResultEstimates = new ArrayList();
+    private List<FuzzyNumber> fuzzyResultEstimates = new ArrayList();
     
     public void createResearch() {
         List<Integer> dlpId = dlpSystem.getResearchDlpId(1);
@@ -71,6 +85,18 @@ public class ResearchController {
             }
             addResearchResult(id, result);
         }
+    }
+    public void drawGraph() {
+        for (Estimates element :researchResultEstimates) {
+            FuzzyNumber fuzzyNumber = new FuzzyNumber();
+            Estimates estimate = (Estimates)element;
+            fuzzyNumber.setTitle(dlpSystem.getResearchDlpTitle(estimate.getDlpId()));
+            fuzzyNumber.setNumber(estimate.getFuzzyEstimate());
+            fuzzyResultEstimates.add(fuzzyNumber);
+        }
+        //float[][] points = new float[][] {{1,1}, {1,2}, {2,1}, {3,9},{4,10}};
+        drawing.Draw(/*points*/fuzzyResultEstimates);
+        
     }
     public void printResults() {
         for(Estimates element :researchResultEstimates) 

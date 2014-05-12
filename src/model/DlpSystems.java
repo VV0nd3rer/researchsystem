@@ -136,4 +136,17 @@ public class DlpSystems extends ModelAction {
         }
         return dlpId;
     }
+    public String getResearchDlpTitle(int dlpId) {
+        String sqlQuery = "Select title from dlp_systems where system_id = ?";
+        String res = new String();
+        ResultSet rs = findRecordsById(sqlQuery, dlpId);
+        try {
+            while (rs.next()) {
+                res = rs.getString("title");
+            }
+        } catch (SQLException sql) {
+            
+        } 
+      return res; 
+    }
 }

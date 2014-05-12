@@ -70,6 +70,7 @@ public class MainController {
     public void createResearch() {
         researchControl.createResearch();
         researchControl.printResults();
+        researchControl.drawGraph();
     }
     public void selectEnterpriseName(String name) {
         securityLevelModel.setSelectEnterpriseName(name);
