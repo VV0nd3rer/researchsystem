@@ -43,7 +43,7 @@ public class DrawGraph {
     public void Draw(/*float[][] points*/ List<FuzzyNumber> points) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         for (FuzzyNumber number :points) 
-            dataset.addSeries(createXYChart(number.getNumber(), number.getTitle()));
+            dataset.addSeries(createXYChart(number.getNumber(), number.getDlpTitle()));
         generateGraph(dataset);
     }
 }

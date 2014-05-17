@@ -14,6 +14,7 @@ public class Criterias extends ModelAction {
    
     private void fillCompetenceCriterias(ResultSet rs) {
         try {
+            competenceEstimate.clear();
             while (rs.next()) {
                 Estimates estimate = new Estimates();
                 estimate.setCriteriaId(rs.getInt("criteria_id"));
@@ -60,6 +61,10 @@ public class Criterias extends ModelAction {
         return data;
     }
     public List<Estimates> getCompetenceEstimates() {
+//        System.out.println("New call of getCompetenceEstimate");
+//        for(Estimates estim:competenceEstimate) {
+//            estim.print();
+//        }
         return competenceEstimate;
     }
     public float getEstimatesFuzzyValue(int criteriaId) {

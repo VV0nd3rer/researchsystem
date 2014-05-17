@@ -9,6 +9,6 @@ import view.MainForm;
         
 public class main {
     public static void main(String[] args) {
-     new MainForm();
+     MainForm mainForm = new MainForm();
     }
 }

@@ -48,7 +48,7 @@ public class MainController {
         SECURITYLEVEL, THREATS, PENTEST,
         ENTERPRISES, DLPSYSTEMS,
         RESEARCH, DATA, COMPETENCE,
-        CRITERIAESTIMATE, DLPESTIMATE
+        CRITERIAESTIMATE, DLPESTIMATE, RESULT
     }
     
     public TextQuery textQuery;
@@ -69,8 +69,11 @@ public class MainController {
     }
     public void createResearch() {
         researchControl.createResearch();
-        researchControl.printResults();
+        //researchControl.printResults();
         researchControl.drawGraph();
+    }
+    public Vector getResults() {
+      return researchControl.getResults();
     }
     public void selectEnterpriseName(String name) {
         securityLevelModel.setSelectEnterpriseName(name);

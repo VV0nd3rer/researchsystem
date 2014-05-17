@@ -19,8 +19,7 @@ public class ModelAction {
     }
     
     public void updateRecords(Vector _num, Vector _data, String _sql) {
-         PreparedStatement userStmt = null;
-        
+        PreparedStatement userStmt = null;   
         try {
             userStmt = connection.prepareStatement(_sql);
             for(int i = 0; i < _num.size(); i++) {

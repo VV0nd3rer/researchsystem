@@ -27,23 +27,47 @@ class FuzzyElement {
 }
 
 class FuzzyNumber {
-    private final static int ELEMENTS = 5;
+    public final static int ELEMENTS = 5;
     private int dlpId;
-    private String title;
+    private int criteriaId;
+    private String dlpTitle;
+    private String criteriaTitle;
+    private float fuzzyNumber;
     private FuzzyElement[] numberSet = new FuzzyElement[ELEMENTS];
     public void setNumber(float number) {
-        float countX = -2.0f;
-        float countY = 0;
         for (int i = 0; i < ELEMENTS; i++) {
             numberSet[i] = new FuzzyElement();
-            numberSet[i].setX(number + countX);
+        }
+        setX(number);
+        setY();
+    }
+    private void setY() {
+        float countY = 0;
+        for (int i = 0; i < ELEMENTS; i++) {
             numberSet[i].setY(countY);
             if(i > 1) 
                 countY -= 0.5;
             else 
                 countY += 0.5;
-            countX++;
         }
+    }
+    private void setX(float number) {
+        float countX = -0.2f;
+         for (int i = 0; i < ELEMENTS; i++) {
+             numberSet[i].setX(number + countX);
+             countX+=0.1;
+         }
+    }
+    public void setNumber(FuzzyElement[] numberSet) {
+        this.numberSet = numberSet;
+        setY();
+    }
+    public void setNumber(float[] numX) {
+        for (int i = 0; i < numX.length; i++) {
+            numberSet[i] = new FuzzyElement();
+            numberSet[i].setX(numX[i]);
+        }
+        setY();
     }
     public FuzzyElement[] getNumber() {
         return numberSet;
@@ -51,11 +75,41 @@ class FuzzyNumber {
     public void setDlpId(int dlpId) {
         this.dlpId = dlpId;
     }
-    public void setTitle(String title) {
-        this.title = title;
+    public int getDlpId() {
+        return dlpId;
     }
-    public String getTitle() {
-        return title;
+    public void setDlpTitle(String title) {
+        dlpTitle = title;
+    }
+    public String getDlpTitle() {
+        return dlpTitle;
+    }
+    public void setCriteriaId(int criteriaId) {
+        this.criteriaId = criteriaId;
+    }
+    public int getCriteriaId() {
+        return criteriaId;
+    }
+    public boolean thisCriteria(int id) {
+        if(criteriaId == id) 
+            return true;
+        else 
+            return false;
+    }
+    public float getFuzzyNumber() {
+        return this.fuzzyNumber;
+    }
+    public void setFuzzyNumber(float num) {
+        fuzzyNumber = num;
+    }
+    public void print() {
+        System.out.println("criteriaId: " + criteriaId);
+        System.out.println("dlpId: " + dlpId);
+        System.out.println("fuzzyNum: " + fuzzyNumber);
+        for(FuzzyElement element : numberSet) {
+            System.out.println("x: " + element.getX());
+            System.out.println("y: " + element.getY());
+        }
     }
 }
 
@@ -65,48 +119,135 @@ public class ResearchController {
     private DrawGraph drawing = new DrawGraph();
     //private Vector criteriasEstimates = new Vector();
     private Vector dlpEstimatesByCriteria = new Vector();
-    private List<Estimates> researchResultEstimates = new ArrayList();
-    private List<FuzzyNumber> fuzzyResultEstimates = new ArrayList();
+    //private List<Estimates> researchResultEstimates = new ArrayList();
+    private List<FuzzyNumber> criteriaResult = new ArrayList();
+    private List<FuzzyNumber> dlpResult = new ArrayList();
+    private List<FuzzyNumber> fuzzyResult = new ArrayList();
     
     public void createResearch() {
-        List<Integer> dlpId = dlpSystem.getResearchDlpId(1);
-        for (Integer id :dlpId) {
+        fillResultsLists(dlpSystem.getResearchDlpId(1));
+        fillFuzzyList();
+//            for(int i = 0; i < resultVec.size(); i++) {
+//                result += (float)resultVec.get(i);
+//            }
+//            addResearchResult(id, result);
+//        }
+    }
+    private void fillResultsLists(List<Integer> dlpId) {
+            List<Estimates> criterias = criteria.getCompetenceEstimates();
+            for (Estimates criteriaEstimate : criterias) {
+                 FuzzyNumber criteriaNumber = new FuzzyNumber();
+                 int criteriaId = criteriaEstimate.getCriteriaId();
+                 float criteriaFuzzy = criteria.getEstimatesFuzzyValue(criteriaId);
+                criteriaNumber.setCriteriaId(criteriaId);
+                criteriaNumber.setNumber(criteriaFuzzy);
+                criteriaResult.add(criteriaNumber);
+            }
+          for (Integer id :dlpId) {
             List<Estimates> dlpSystems = dlpSystem.getCompetenceEstimate(id);
-            Vector resultVec = new Vector();
-            float result = 0;
-            for (Estimates estimate :dlpSystems) {
-                int criteriaId = estimate.getCriteriaId();
-                float criteriaFuzzy = criteria.getEstimatesFuzzyValue(criteriaId);
-                float dlpFuzzy = estimate.getFuzzyEstimate();
-                resultVec.add(dlpFuzzy*criteriaFuzzy);
+            //Vector resultVec = new Vector();
+            for (Estimates dlpEstimate :dlpSystems) {
+                int criteriaId = dlpEstimate.getCriteriaId();
+                float dlpFuzzy = dlpEstimate.getFuzzyEstimate();
+                FuzzyNumber dlpNumber = new FuzzyNumber();             
+                dlpNumber.setCriteriaId(criteriaId);
+                dlpNumber.setDlpId(dlpEstimate.getDlpId());
+                dlpNumber.setNumber(dlpFuzzy);  
+                dlpResult.add(dlpNumber);
+                //resultVec.add(dlpFuzzy*criteriaFuzzy);
             }
-            for(int i = 0; i < resultVec.size(); i++) {
-                result += (float)resultVec.get(i);
-            }
-            addResearchResult(id, result);
+         }
+    }
+    private void fillFuzzyList() {
+         int dlpId = dlpResult.get(0).getDlpId();
+        ArrayList<FuzzyNumber> multiplyNum = new ArrayList();
+        for (FuzzyNumber dlpNum : dlpResult) {
+//            dlpResult.get(dlpResult.size()-1).print();
+             if (dlpId != dlpNum.getDlpId() || 
+                (dlpNum.getCriteriaId() == dlpResult.get(dlpResult.size()-1).getCriteriaId() && 
+                 dlpNum.getDlpId() == dlpResult.get(dlpResult.size()-1).getDlpId())) {
+//                 System.out.println("New DLP");
+                 float[] numSet = new float[]  {0,0,0,0,0};
+                for (FuzzyNumber num : multiplyNum) {
+                     FuzzyElement[] current = num.getNumber();
+                     for(int i = 0; i < current.length; i++) {
+//                         System.out.println("multiplyNum's element X: " + current[i].getX());
+                         numSet[i] += current[i].getX();
+                     }
+                 }
+//                System.out.println("numSet: ");
+//                for(int i = 0; i < numSet.length; i++) {
+//                    System.out.println(numSet[i]);
+//                }
+                
+                 FuzzyNumber result = new FuzzyNumber();
+                 result.setNumber(numSet);
+                 result.setDlpId(dlpId);
+                 result.setFuzzyNumber(numSet[2]);
+                 result.setDlpTitle(dlpSystem.getResearchDlpTitle(dlpId));
+                 fuzzyResult.add(result);
+                 dlpId = dlpNum.getDlpId();
+                 multiplyNum.clear();
+             }
+           
+             int criteriaId = dlpNum.getCriteriaId();
+             for (FuzzyNumber criteriaNum : criteriaResult) {
+                 if(criteriaNum.thisCriteria(criteriaId))
+                     multiplyNum.add(multiplyNumbers(criteriaNum.getNumber(), dlpNum.getNumber()));
+             }
+
         }
+    }
+    public FuzzyNumber multiplyNumbers(FuzzyElement[] criteria, FuzzyElement[] dlp) {
+            FuzzyNumber result = new FuzzyNumber();      
+            FuzzyElement[] resultElem = new FuzzyElement[5];
+            for (int i = 0; i < dlp.length; i++) {
+                resultElem[i] = new FuzzyElement();
+                resultElem[i].setX(criteria[i].getX() * dlp[i].getX());
+            }
+            result.setNumber(resultElem);
+            return result;
     }
     public void drawGraph() {
-        for (Estimates element :researchResultEstimates) {
-            FuzzyNumber fuzzyNumber = new FuzzyNumber();
-            Estimates estimate = (Estimates)element;
-            fuzzyNumber.setTitle(dlpSystem.getResearchDlpTitle(estimate.getDlpId()));
-            fuzzyNumber.setNumber(estimate.getFuzzyEstimate());
-            fuzzyResultEstimates.add(fuzzyNumber);
-        }
-        //float[][] points = new float[][] {{1,1}, {1,2}, {2,1}, {3,9},{4,10}};
-        drawing.Draw(/*points*/fuzzyResultEstimates);
+//        for (FuzzyNumber element : fuzzyResult) {
+//            FuzzyNumber fuzzyNumber = new FuzzyNumber();
+//            fuzzyNumber.setTitle(dlpSystem.getResearchDlpTitle(estimate.getDlpId()));
+//            fuzzyNumber.setNumber(estimate.getFuzzyEstimate());
+//            fuzzyResult.add(fuzzyNumber);
+//        }
+        drawing.Draw(/*points*/fuzzyResult);
         
     }
+    /*For debug */
     public void printResults() {
-        for(Estimates element :researchResultEstimates) 
-            element.print();
+        printElement(criteriaResult, "criteriaResult");
+        printElement(dlpResult, "dlpResult");
+        printElement(fuzzyResult, "fuzzyResult");
+    }
+    private void printElement(List<FuzzyNumber> element, String param) {
+        for(FuzzyNumber elem :element) { 
+            System.out.println(param);
+            elem.print();
+        }
+    }
+    /*------*/
+    public Vector getResults() {
+        Vector res = new Vector();
+        for(FuzzyNumber element :fuzzyResult) {
+            Vector row = new Vector();
+            int id = element.getDlpId();
+            row.add(id);
+            row.add(dlpSystem.getResearchDlpTitle(id));
+            row.add(element.getFuzzyNumber());
+            res.add(row);
+        }
+        return res;
     }
     private void addResearchResult(int dlpId, float result) {
-        Estimates resultDlpEstimate = new Estimates();
-        resultDlpEstimate.setDlpId(dlpId);
-        resultDlpEstimate.setFuzzyEstimate(result);
-        researchResultEstimates.add(resultDlpEstimate);
+//        Estimates resultDlpEstimate = new Estimates();
+//        resultDlpEstimate.setDlpId(dlpId);
+//        resultDlpEstimate.setFuzzyEstimate(result);
+//        researchResultEstimates.add(resultDlpEstimate);
     }
     private void findCompetenceCriterias() {
         int id = 1;
@@ -117,27 +258,64 @@ public class ResearchController {
         for (int system_id = 1; system_id < 7; system_id ++) 
           dlpSystem.selectCompetenceEstimates(system_id, research_id);
     }
-    private List<Estimates> determinateFuzzyEstimate(CalculationEstimates calculationEstimates, 
+     private List<Estimates> determinateFuzzyCriteria(CalculationEstimates calculationEstimates, 
                                                                  List<Estimates> listOfEstimates, 
                                                                  List<Estimates> competenceEstimates) {
-        //listOfEstimates.clear();
-        List<Estimates> currentEstimates = new ArrayList();
+        
+//        float maxVal = calculationEstimates.getMaxValue();
+//        float minVal = calculationEstimates.getMinValue();
+//        float averageVal = (maxVal + minVal)/2;
+//        
+//        float biggerVal = (maxVal + averageVal)/2;
+//        //mean == averageVal
+//        float smallerVal = (minVal + averageVal)/2;
+//        float lessVal = (minVal + smallerVal)/2;
+        
         float standartDeviation = calculationEstimates.getStdDev();
         float mean = calculationEstimates.getMean();
         float biggerVal = mean + standartDeviation;
         float smallerVal = mean-(standartDeviation/2);
         float lessVal = mean - standartDeviation;
+       
+        return determineFuzzyMark(competenceEstimates, listOfEstimates, 
+                                                 biggerVal, mean, smallerVal, lessVal);
+       
+    }
+    private List<Estimates> determinateFuzzyDlp(CalculationEstimates calculationEstimates, 
+                                                                 List<Estimates> listOfEstimates, 
+                                                                 List<Estimates> competenceEstimates) {
+
+        float maxVal = calculationEstimates.getMaxValue();
+        float minVal = calculationEstimates.getMinValue();
+        float averageVal = (maxVal + minVal)/2;
         
-        for (Estimates estimate :competenceEstimates) {
+        float biggerVal = (maxVal + averageVal)/2;
+        //mean == averageVal
+        float smallerVal = (minVal + averageVal)/2;
+        float lessVal = (minVal + smallerVal)/2;
+        
+//        float standartDeviation = calculationEstimates.getStdDev();
+//        float mean = calculationEstimates.getMean();
+//        float biggerVal = mean + standartDeviation;
+//        float smallerVal = mean-(standartDeviation/2);
+//        float lessVal = mean - standartDeviation;
+        
+          return determineFuzzyMark(competenceEstimates, listOfEstimates, 
+                                                 biggerVal, averageVal, smallerVal, lessVal);
+    }
+    private List<Estimates> determineFuzzyMark(List<Estimates> estimates, List<Estimates> listOfEstimates, 
+                                                                        float biggerVal, float averageVal, float smallerVal, float lessVal) {
+         List<Estimates> currentEstimates = new ArrayList();
+         for (Estimates estimate :estimates) {
             float mark = 0.0f;
             float currVal = estimate.getMean();
             if (currVal > biggerVal)
                 mark = 0.8f;
-            else if (currVal < biggerVal && currVal > mean) 
+            else if (/*currVal < biggerVal && */ currVal > averageVal) 
                 mark = 0.5f;
-            else if (currVal < mean && currVal > smallerVal)
+            else if (/*currVal < averageVal && */currVal > smallerVal)
                 mark = 0.35f;
-            else if (currVal < smallerVal && currVal > lessVal)
+            else if (/*currVal < smallerVal && */currVal > lessVal)
                 mark = 0.25f;
             else if (currVal < lessVal)
                 mark = 0.2f;
@@ -165,7 +343,7 @@ public class ResearchController {
         CalculationEstimates calculationCriteriaEstimates = new CalculationEstimates(criteria.getCompetenceEstimatesValue());
         List <Estimates> listOfEstimates = criteria.getEstimatesList();
         List<Estimates> competenceEstimates = criteria.getCompetenceEstimates();
-        List<Estimates> currentEstimates = determinateFuzzyEstimate(calculationCriteriaEstimates, listOfEstimates, competenceEstimates);
+        List<Estimates> currentEstimates = determinateFuzzyCriteria(calculationCriteriaEstimates, listOfEstimates, competenceEstimates);
         //System.out.println("---------------- Set criteria estimates. --------------------");
         for(Estimates estimate :currentEstimates) {
             criteria.setEstimatesFuzzyValue(estimate.getCriteriaId(), estimate.getFuzzyEstimate());
@@ -186,17 +364,21 @@ public class ResearchController {
         findCompetenceSystems();
         List <Estimates> listOfEstimates = dlpSystem.getEstimateList();
         Vector competenceEstimates = dlpSystem.getCompetenceEstimates();
+        
+        Vector commonData = new Vector();
         for (int i = 0; i < competenceEstimates.size(); i++) {
-            CalculationEstimates calculationSystemEstimates = new CalculationEstimates(dlpSystem.getCompetenceEstimateValue(i));    
+            List<Float> res = dlpSystem.getCompetenceEstimateValue(i);
+            commonData.add(res);
+        }
+        CalculationEstimates calculationSystemEstimates = new CalculationEstimates((Object)commonData);
+        
+        for (int i = 0; i < competenceEstimates.size(); i++) {
+            //CalculationEstimates calculationSystemEstimates = new CalculationEstimates(dlpSystem.getCompetenceEstimateValue(i));    
             List <Estimates> competenceEstimatesByCriteria = (List<Estimates>) competenceEstimates.get(i);
-            List<Estimates> currentEstimates = determinateFuzzyEstimate(calculationSystemEstimates, listOfEstimates, competenceEstimatesByCriteria);
-            //System.out.println("------------------ Set dlp estimates. --------------------");
+            List<Estimates> currentEstimates = determinateFuzzyDlp(calculationSystemEstimates, listOfEstimates, competenceEstimatesByCriteria);
+
             for(Estimates estimate :currentEstimates) {
-                dlpSystem.setEstimatesFuzzyValue(estimate.getDlpId(), estimate.getCriteriaId(), estimate.getFuzzyEstimate());
-//                System.out.println("system id: " + estimate.getDlpId());
-//                System.out.println("criteria id: " + estimate.getCriteriaId());
-//                System.out.println("current fuzzy estimate: " + estimate.getFuzzyEstimate());
-//                System.out.println("current ling estim: " + estimate.getLinguisticEstimate());
+                dlpSystem.setEstimatesFuzzyValue(estimate.getDlpId(), estimate.getCriteriaId(), estimate.getFuzzyEstimate());                
                 dlpEstimatesByCriteria.add(estimate);
             }
         }
@@ -216,6 +398,5 @@ public class ResearchController {
         }
         return res;
     }
-    
 }
     

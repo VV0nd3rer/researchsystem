@@ -2,25 +2,15 @@ package controller;
 
 import java.util.List;
 import java.util.ArrayList;
-
-//class Estimates {
-//    private float fuzzyEstimate;
-//    private String linguisticEstimate;
-//    public void setFuzzyEstimate(float estimate) {
-//        fuzzyEstimate = estimate;
-//    }
-//    public float getFuzzyEstimate() {
-//        return fuzzyEstimate;
-//    }
-//    public void setLinguisticEstimate(String estimate) {
-//        linguisticEstimate = estimate;
-//    }
-//    public String getLinguisticEstimate() {
-//        return linguisticEstimate;
-//    }
-//}
+import java.util.Collections;
+import java.util.Vector;
 
 public class CalculationEstimates {
+    private Vector commonData = new Vector();
+    private List<Float> minList = new ArrayList();
+    private List<Float> maxList = new ArrayList();
+    private float minValue;
+    private float maxValue;
     private List<Float> listOfData = new ArrayList();
     private List<Float> listOfDifferences = new ArrayList();
     private List<Float> listOfSquares = new ArrayList();
@@ -28,12 +18,40 @@ public class CalculationEstimates {
     private float mean = 0;
 //    double size;    
 
-    public CalculationEstimates(List<Float> data) 
+    public CalculationEstimates(Object data) 
     {
-        this.listOfData = data;
-//        size = data.length;
+        commonData = (Vector)data;
+        findMaxValue();
+        findMinValue();
     }   
-
+    public CalculationEstimates(List<Float> data) {
+        this.listOfData = data;
+    }
+    public float getMinValue() {
+        return minValue;
+    }
+    public float getMaxValue() {
+        return maxValue;
+    }
+    private void findMaxValue() {
+        findMaxList();
+        maxValue = Collections.max(maxList);
+    }
+    private void findMinValue() {
+        findMinList();
+        minValue = Collections.min(minList);
+    }
+    private void findMaxList() {
+        for (int i = 0; i < commonData.size(); i++) {
+            maxList.add(Collections.max((List<Float>)commonData.get(i)));
+        }
+    }
+    private void findMinList() {
+          for (int i = 0; i < commonData.size(); i++) {
+            minList.add(Collections.min((List<Float>)commonData.get(i)));
+        }
+    }
+    
     float findMean()
     {
         float sum = 0;
